@@ -15,6 +15,18 @@ import { useSounds } from "./realtime/hooks/use-sounds";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
+  vue: SkillNames.UNITY,
+  github: SkillNames.GITHUB,
+  nextjs: SkillNames.UNREAL,
+  react: SkillNames.REACT,
+  js: SkillNames.VITE,
+  express: SkillNames.POSTMAN,
+  postgres: SkillNames.POWERBI,
+  nodejs: SkillNames.TENSORFLOW,
+  mongodb: SkillNames.SCIKIT,
+};
+
 const AnimatedBackground = () => {
   const { isLoading, bypassLoading } = usePreloader();
   const { theme } = useTheme();
@@ -49,8 +61,9 @@ const AnimatedBackground = () => {
         splineApp.setVariable("desc", "");
       }
     } else {
-      if (!selectedSkillRef.current || selectedSkillRef.current.name !== e.target.name) {
-        const skill = SKILLS[e.target.name as SkillNames];
+      const skillKey = SPLINE_TO_SKILL_MAP[e.target.name] || (e.target.name as SkillNames);
+      if (!selectedSkillRef.current || selectedSkillRef.current.name !== skillKey) {
+        const skill = SKILLS[skillKey as SkillNames];
         if (skill) {
           if (selectedSkillRef.current) playReleaseSound();
           playPressSound();
@@ -82,7 +95,8 @@ const AnimatedBackground = () => {
     });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp || isInputFocused()) return;
-      const skill = SKILLS[e.target.name as SkillNames];
+      const skillKey = SPLINE_TO_SKILL_MAP[e.target.name] || (e.target.name as SkillNames);
+      const skill = SKILLS[skillKey as SkillNames];
       if (skill) {
         playPressSound();
         setSelectedSkill(skill);
@@ -92,6 +106,29 @@ const AnimatedBackground = () => {
       }
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
+    splineApp.addEventListener("mouseDown", (e) => {
+      const skillKey = SPLINE_TO_SKILL_MAP[e.target.name] || (e.target.name as SkillNames);
+      const skill = SKILLS[skillKey as SkillNames];
+      if (skill) {
+        playPressSound();
+        setSelectedSkill(skill);
+        selectedSkillRef.current = skill;
+        splineApp.setVariable("heading", skill.label);
+        splineApp.setVariable("desc", skill.shortDescription);
+
+        const target = splineApp.findObjectByName(e.target.name);
+        if (target) {
+          gsap.to(target.scale, {
+            x: 0.8,
+            y: 0.8,
+            z: 0.8,
+            duration: 0.1,
+            yoyo: true,
+            repeat: 1,
+          });
+        }
+      }
+    });
   };
 
   // --- Animation Setup Helpers ---
@@ -188,10 +225,11 @@ const AnimatedBackground = () => {
 
     const start = () => {
       removePrevTweens();
-      Object.values(SKILLS)
+      const splineObjectNames = Object.keys(SPLINE_TO_SKILL_MAP);
+      splineObjectNames
         .sort(() => Math.random() - 0.5)
-        .forEach((skill, idx) => {
-          const keycap = splineApp.findObjectByName(skill.name);
+        .forEach((objName, idx) => {
+          const keycap = splineApp.findObjectByName(objName);
           if (!keycap) return;
           const t = gsap.to(keycap.position, {
             y: Math.random() * 200 + 200,
@@ -208,8 +246,9 @@ const AnimatedBackground = () => {
 
     const stop = () => {
       removePrevTweens();
-      Object.values(SKILLS).forEach((skill) => {
-        const keycap = splineApp.findObjectByName(skill.name);
+      const splineObjectNames = Object.keys(SPLINE_TO_SKILL_MAP);
+      splineObjectNames.forEach((objName) => {
+        const keycap = splineApp.findObjectByName(objName);
         if (!keycap) return;
         const t = gsap.to(keycap.position, {
           y: 0,
@@ -247,29 +286,19 @@ const AnimatedBackground = () => {
     );
 
     const allObjects = splineApp.getAllObjects();
-    const keycaps = allObjects.filter((obj) => obj.name === "keycap");
+    const splineObjectNames = Object.keys(SPLINE_TO_SKILL_MAP);
+    const skillObjects = allObjects.filter((obj) => splineObjectNames.includes(obj.name));
 
     await sleep(900);
 
-    if (isMobile) {
-      const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
-      mobileKeyCaps.forEach((keycap) => { keycap.visible = true; });
-    } else {
-      const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
-      desktopKeyCaps.forEach(async (keycap, idx) => {
-        await sleep(idx * 70);
-        keycap.visible = true;
-      });
-    }
-
-    keycaps.forEach(async (keycap, idx) => {
-      keycap.visible = false;
-      await sleep(idx * 70);
-      keycap.visible = true;
+    skillObjects.forEach(async (obj, idx) => {
+      obj.visible = false;
+      await sleep(idx * 40);
+      obj.visible = true;
       gsap.fromTo(
-        keycap.position,
-        { y: 200 },
-        { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+        obj.position,
+        { y: obj.position.y + 100 },
+        { y: obj.position.y, duration: 0.5, ease: "back.out(1.7)" }
       );
     });
   };
@@ -387,7 +416,8 @@ const AnimatedBackground = () => {
         teardownKeyboard?.pause();
       }
 
-      // Handle Bongo Cat
+      // Handle Bongo Cat - Disabled for cleaner portfolio
+      /*
       if (activeSection === "projects") {
         await sleep(300);
         bongoAnimationRef.current?.start();
@@ -395,6 +425,7 @@ const AnimatedBackground = () => {
         await sleep(200);
         bongoAnimationRef.current?.stop();
       }
+      */
 
       // Handle Contact Section Animations
       if (activeSection === "contact") {
@@ -432,6 +463,7 @@ const AnimatedBackground = () => {
         ref={splineContainer}
         onLoad={(app: Application) => {
           setSplineApp(app);
+          (window as any).spline = app;
           bypassLoading();
         }}
         scene="/assets/skills-keyboard.spline"
