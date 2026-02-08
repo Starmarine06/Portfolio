@@ -32,6 +32,14 @@ import {
   SiTypescript,
   SiVercel,
   SiVscodium,
+  SiTensorflow,
+  SiScikitlearn,
+  SiUnity,
+  SiUnrealengine,
+  SiPostman,
+  SiPowerbi,
+  SiPython,
+  SiVite,
 } from "react-icons/si";
 import { VscCode } from "react-icons/vsc";
 
@@ -43,186 +51,101 @@ import { TbTerminal2 } from "react-icons/tb";
 const CONTACT_LINKS = [
   {
     name: "Email",
-    content: "naresh.khatri2345@gmail",
-    href: "mailto:naresh.khatri2345@gmail.com",
+    content: "dev.nambiar@example.com",
+    href: "mailto:dev.nambiar@example.com",
     icon: <FaEnvelope height={"50px"} />,
   },
   {
     name: "Phone",
-    content: "1234567890",
-    href: "tel:1234567890",
+    content: "+1 (555) 000-0000",
+    href: "tel:+15550000000",
     icon: <FaPhone height={"50px"} />,
   },
   {
     name: "LinkedIn",
-    href: "https://www.linkedin.com/in/naresh-khatri/",
-    content: "/naresh-khatri",
+    href: "https://www.linkedin.com/in/dev-nambiar/",
+    content: "/dev-nambiar",
     icon: <FaLinkedin height={"50px"} />,
   },
   {
     name: "GitHub",
-    href: "https://github.com/Naresh-Khatri",
-    content: "/naresh-khatri",
+    href: "https://github.com/dev-nambiar",
+    content: "/dev-nambiar",
     icon: <FaGithub height={"50px"} />,
   },
 ];
 
 const TOOLS = [
   {
-    name: "JavaScript",
-    content: "JavaScript is a high-level, interpreted programming language",
-    icon: <SiJavascript size={"50px"} color={"#f0db4f"} />,
-    color: "#f0db4f",
+    name: "Tensorflow",
+    content: "Open-source library for machine learning",
+    icon: <SiTensorflow size={"50px"} color={"#FF6F00"} />,
+    color: "#FF6F00",
   },
   {
-    name: "TypeScript",
-    content: "TypeScript is a superset of JavaScript that compiles to plain JS",
-    icon: <SiTypescript size={"50px"} color={"#007acc"} />,
-    color: "#007acc",
+    name: "SciKit-Learn",
+    content: "Machine learning library for Python",
+    icon: <SiScikitlearn size={"50px"} color={"#F7931E"} />,
+    color: "#F7931E",
   },
   {
-    name: "HTML",
-    content: "Next.js is a React framework for production",
-    icon: <FaHtml5 size={"50px"} color="#e34c26" />,
-    color: "#e34c26",
+    name: "Unity",
+    content: "Game engine and ML-Agents platform",
+    icon: <SiUnity size={"50px"} color="#fff" />,
+    color: "#000000",
   },
   {
-    name: "CSS",
-    content: "Next.js is a React framework for production",
-    icon: <FaCss3 size={"50px"} color="#563d7c" />,
-    color: "#563d7c",
+    name: "Unreal Engine",
+    content: "Advanced 3D creation tool",
+    icon: <SiUnrealengine size={"50px"} color="#fff" />,
+    color: "#000000",
   },
   {
-    name: "Nodejs",
-    content: "Next.js is a React framework for production",
-    icon: <FaNodeJs size={"50px"} color="#6cc24a" />,
-    color: "#6cc24a",
+    name: "Python",
+    content: "The language of AI",
+    icon: <SiPython size={"50px"} color="#3776AB" />,
+    color: "#3776AB",
+  },
+  {
+    name: "Postman",
+    content: "API development platform",
+    icon: <SiPostman size={"50px"} color="#FF6C37" />,
+    color: "#FF6C37",
+  },
+  {
+    name: "Power BI",
+    content: "Business analytics service",
+    icon: <SiPowerbi size={"50px"} color="#F2C811" />,
+    color: "#F2C811",
   },
   {
     name: "React.js",
-    content: "Next.js is a React framework for production",
+    content: "Frontend library for interactive UI",
     icon: <FaReact size={"50px"} color="#61dafb" />,
     color: "#61dafb",
   },
   {
-    name: "Docker",
-    content: "Next.js is a React framework for production",
-    icon: <FaDocker size={"50px"} color="#2496ed" />,
-    color: "#2496ed",
-  },
-  {
-    name: "NginX",
-    content: "Next.js is a React framework for production",
-    icon: <DiNginx size={"50px"} color="#008000" />,
-    color: "#008000",
-  },
-  {
-    name: "Vue.js",
-    content: "Next.js is a React framework for production",
-    icon: <FaVuejs size={"50px"} color="#41b883" />,
-    color: "#41b883",
-  },
-  {
-    name: "Express.js",
-    content: "Next.js is a React framework for production",
-    icon: <SiExpress size={"50px"} color="#fff" />,
-    color: "#000000",
-  },
-  {
-    name: "PostgreSQL",
-    content: "Next.js is a React framework for production",
-    icon: <DiPostgresql size={"50px"} color="#336791" />,
-    color: "#336791",
-  },
-  {
-    name: "MongoDB",
-    content: "Next.js is a React framework for production",
-    icon: <DiMongodb size={"50px"} color="#4db33d" />,
-    color: "#4db33d",
-  },
-  {
-    name: "Tailwind CSS",
-    content: "Next.js is a React framework for production",
-    icon: <RiTailwindCssFill size={"50px"} color="#06b6d4" />,
-    color: "#06b6d4",
-  },
-  {
-    name: "Firebase",
-    content: "Next.js is a React framework for production",
-    icon: <RiFirebaseFill size={"50px"} color="#FFCA28" />,
-    color: "#FFCA28",
-  },
-  {
-    name: "Git",
-    content: "Next.js is a React framework for production",
-    icon: <FaGit size={"50px"} color="#f05032" />,
-    color: "#f05032",
-  },
-  {
     name: "GitHub",
-    content: "Next.js is a React framework for production",
+    content: "Version control and collaboration",
     icon: <FaGithub size={"50px"} color="#fff" />,
     color: "#000000",
   },
   {
-    name: "VS Code",
-    content: "Next.js is a React framework for production",
-    icon: <SiVscodium size={"50px"} color="#007acc" />,
-    color: "#007acc",
+    name: "Vite",
+    content: "Next generation frontend tooling",
+    icon: <SiVite size={"50px"} color="#646CFF" />,
+    color: "#646CFF",
   },
   {
-    name: "VIM",
-    content: "Next.js is a React framework for production",
-    icon: <DiVim size={"50px"} color="#fff" />,
-    color: "#000000",
-  },
-  {
-    name: "Prettier",
-    content: "Next.js is a React framework for production",
-    icon: <SiPrettier size={"50px"} color="#f7b93c" />,
-    color: "#f7b93c",
-  },
-  {
-    name: "NPM",
-    content: "Next.js is a React framework for production",
-    icon: <DiNpm size={"50px"} color="#CB3837" />,
-    color: "#CB3837",
-  },
-  {
-    name: "Yarn",
-    content: "Next.js is a React framework for production",
-    icon: <FaYarn size={"50px"} color="#2C8EBB" />,
-    color: "#2C8EBB",
-  },
-  {
-    name: "Vercel",
-    content: "Next.js is a React framework for production",
-    icon: <SiVercel size={"50px"} color="#fff" />,
-    color: "#000000",
+    name: "Docker",
+    content: "Containerization for ML environments",
+    icon: <FaDocker size={"50px"} color="#2496ed" />,
+    color: "#2496ed",
   },
   {
     name: "Linux",
-    content: "Next.js is a React framework for production",
+    content: "The developer's OS",
     icon: <FaLinux size={"50px"} color="#fff" />,
-    color: "#000000",
-  },
-  {
-    name: "Kubuntu",
-    content: "Next.js is a React framework for production",
-    // give me correct color for  kubuntu
-    icon: <SiKubuntu size={"50px"} color="#0077C4" />,
-    color: "#000000",
-  },
-  {
-    name: "Terminal",
-    content: "Next.js is a React framework for production",
-    icon: <TbTerminal2 size={"50px"} color="#fff" />,
-    color: "#000000",
-  },
-  {
-    name: "AWS",
-    content: "Next.js is a React framework for production",
-    icon: <FaAws size={"50px"} color="#3f51b5" />,
     color: "#000000",
   },
 ];
@@ -251,9 +174,9 @@ function Page() {
                 />
               </div>
               <div className="flex flex-col gap-3 lg:items-center ml-10 md:ml-20 lg:ml-0">
-                <p className="text-center text-xl">Naresh Khatri</p>
+                <p className="text-center text-xl">Dev Nambiar</p>
                 <div className="text-xs bg-zinc-700 w-fit px-3 py-1 rounded-full">
-                  Web Developer
+                  ML Engineer
                 </div>
               </div>
             </div>
@@ -287,11 +210,11 @@ function Page() {
           >
             <h1 className="text-3xl mb-10 lg:md-20">About me</h1>
             <p className="mb-10 text-roboto">
-              Hey there! I&apos;m Naresh, a Fullstack developer passionate about
-              creating meaningful digital experiences. With great in Web
-              development, I thrive on turning ideas into reality through coding
-              and design. My journey began with a fascination for technology and
-              a drive to make a positive impact.
+              Hey there! I&apos;m Dev, a Machine Learning Engineer passionate about
+              creating intelligent and interactive digital experiences. With expertise in AI
+              development, I thrive on turning complex data into reality through coding
+              and innovative ML solutions. My journey began with a fascination for intelligence and
+              a drive to push the boundaries of technology.
             </p>
             <p className="mb-10">
               When I&apos;m not coding, you can find me [Your
