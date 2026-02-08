@@ -16,6 +16,10 @@ export enum SkillNames {
   POSTGRES = "postgres",
   TYPESCRIPT = "typescript",
   JAVASCRIPT = "javascript",
+  PYTORCH = "pytorch",
+  PYTHON = "python",
+  NUMPY = "numpy",
+  PANDAS = "pandas",
 }
 export type Skill = {
   id: number;
@@ -97,6 +101,38 @@ export const SKILLS: Partial<Record<SkillNames, Skill>> = {
     shortDescription: "Machine learning in Python, simplified! 🐍🔬",
     color: "#f7931e",
     icon: "https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg",
+  },
+  [SkillNames.PYTORCH]: {
+    id: 10,
+    name: "pytorch",
+    label: "PyTorch",
+    shortDescription: "The preferred deep learning framework for researchers and developers alike. 🔥",
+    color: "#ee4c2c",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg",
+  },
+  [SkillNames.PYTHON]: {
+    id: 11,
+    name: "python",
+    label: "Python",
+    shortDescription: "The Swiss Army knife of programming languages. 🐍",
+    color: "#3776ab",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+  },
+  [SkillNames.NUMPY]: {
+    id: 12,
+    name: "numpy",
+    label: "NumPy",
+    shortDescription: "The fundamental package for scientific computing with Python. 🔢",
+    color: "#013243",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg",
+  },
+  [SkillNames.PANDAS]: {
+    id: 13,
+    name: "pandas",
+    label: "Pandas",
+    shortDescription: "Powerful data manipulation and analysis library for Python. 🐼",
+    color: "#150458",
+    icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg",
   },
 };
 

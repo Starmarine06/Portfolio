@@ -8,10 +8,14 @@ import SkillsSection from "@/components/sections/skills";
 import ProjectsSection from "@/components/sections/projects";
 import ContactSection from "@/components/sections/contact";
 import HeroSection from "@/components/sections/hero";
+import MatrixBackground from "@/components/MatrixBackground";
 
 function MainPage() {
   return (
     <SmoothScroll>
+      <div className="fixed inset-0 z-[-1] pointer-events-none">
+        <MatrixBackground />
+      </div>
       <AnimatedBackground />
       <main className={cn("bg-slate-100 dark:bg-transparent canvas-overlay-mode")}>
         <HeroSection />
