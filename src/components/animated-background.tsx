@@ -28,6 +28,8 @@ const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
   html: SkillNames.REACT,
   css: SkillNames.VITE,
   npm: SkillNames.GITHUB,
+  javascript: SkillNames.JAVASCRIPT,
+  typescript: SkillNames.TYPESCRIPT,
 };
 
 const AnimatedBackground = () => {
