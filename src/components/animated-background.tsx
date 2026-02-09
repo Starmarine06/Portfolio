@@ -17,19 +17,23 @@ gsap.registerPlugin(ScrollTrigger);
 
 const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
   linux: SkillNames.PYTHON,
-  mongodb: SkillNames.NUMPY,
-  express: SkillNames.PANDAS,
+  mongodb: SkillNames.MONGODB,
+  express: SkillNames.EXPRESS,
   firebase: SkillNames.PYTORCH,
-  nodejs: SkillNames.TENSORFLOW,
+  nodejs: SkillNames.NODEJS,
   tailwind: SkillNames.SCIKIT,
   react: SkillNames.REACT,
   github: SkillNames.GITHUB,
-  nextjs: SkillNames.VITE,
+  git: SkillNames.GITHUB,
+  nextjs: SkillNames.NEXTJS,
   html: SkillNames.REACT,
   css: SkillNames.VITE,
   npm: SkillNames.GITHUB,
   javascript: SkillNames.JAVASCRIPT,
   typescript: SkillNames.TYPESCRIPT,
+  js: SkillNames.JAVASCRIPT,
+  ts: SkillNames.TYPESCRIPT,
+  aws: SkillNames.TENSORFLOW,
 };
 
 const AnimatedBackground = () => {
@@ -61,9 +65,11 @@ const AnimatedBackground = () => {
       if (selectedSkillRef.current) playReleaseSound();
       setSelectedSkill(null);
       selectedSkillRef.current = null;
-      if (splineApp.getVariable("headingl") && splineApp.getVariable("desc")) {
+      try {
         splineApp.setVariable("headingl", "");
         splineApp.setVariable("desc", "");
+      } catch (e) {
+        // Variables might not exist in the model
       }
     } else {
       const skillKey = SPLINE_TO_SKILL_MAP[e.target.name] || (e.target.name as SkillNames);
@@ -95,8 +101,10 @@ const AnimatedBackground = () => {
     splineApp.addEventListener("keyUp", () => {
       if (!splineApp || isInputFocused()) return;
       playReleaseSound();
-      splineApp.setVariable("headingl", "");
-      splineApp.setVariable("desc", "");
+      try {
+        splineApp.setVariable("headingl", "");
+        splineApp.setVariable("desc", "");
+      } catch (e) { }
     });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp || isInputFocused()) return;
@@ -106,8 +114,10 @@ const AnimatedBackground = () => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        splineApp.setVariable("headingl", skill.label);
-        splineApp.setVariable("desc", skill.shortDescription);
+        try {
+          splineApp.setVariable("headingl", skill.label);
+          splineApp.setVariable("desc", skill.shortDescription);
+        } catch (e) { }
       }
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
@@ -118,8 +128,10 @@ const AnimatedBackground = () => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        splineApp.setVariable("headingl", skill.label);
-        splineApp.setVariable("desc", skill.shortDescription);
+        try {
+          splineApp.setVariable("headingl", skill.label);
+          splineApp.setVariable("desc", skill.shortDescription);
+        } catch (e) { }
 
         const target = splineApp.findObjectByName(e.target.name);
         if (target) {
@@ -268,9 +280,17 @@ const AnimatedBackground = () => {
 
   useEffect(() => {
     if (!selectedSkill || !splineApp) return;
-    splineApp.setVariable("headingl", selectedSkill.label);
-    splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill]);
+    try {
+      splineApp.setVariable("headingl", selectedSkill.label);
+      splineApp.setVariable("desc", selectedSkill.shortDescription);
+    } catch (e) { }
+
+    const textObj = splineApp.findObjectByName("Text");
+    if (textObj) {
+      // @ts-ignore
+      textObj.text = `${selectedSkill.label}\n${selectedSkill.shortDescription}`;
+    }
+  }, [selectedSkill, splineApp]);
 
   // Handle rotation and teardown animations based on active section
   useEffect(() => {
@@ -292,8 +312,10 @@ const AnimatedBackground = () => {
 
     const manageAnimations = async () => {
       if (activeSection !== "skills") {
-        splineApp.setVariable("headingl", "");
-        splineApp.setVariable("desc", "");
+        try {
+          splineApp.setVariable("headingl", "");
+          splineApp.setVariable("desc", "");
+        } catch (e) { }
       }
 
       if (activeSection === "hero") {
@@ -329,7 +351,7 @@ const AnimatedBackground = () => {
           (window as any).spline = app;
           bypassLoading();
         }}
-        scene="https://my.spline.design/skillskeyboard-jVDuxaTuaIbrR4WL6hRBQmSb/"
+        scene="/assets/iphone_new.splinecode"
       />
     </Suspense>
   );
