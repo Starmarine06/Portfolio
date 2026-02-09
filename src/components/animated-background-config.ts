@@ -1,110 +1,95 @@
-export type Section = "hero" | "about" | "skills" | "projects" | "contact";
+export type Vector3 = { x: number; y: number; z: number };
 
-export const STATES = {
+export type KeyboardState = {
+  position: Vector3;
+  rotation: Vector3;
+  scale: Vector3;
+};
+
+export type SectionConfig = {
+  desktop: KeyboardState;
+  mobile: KeyboardState;
+};
+
+export type Section = "hero" | "skills" | "projects" | "experience" | "contact";
+
+const createVector = (x: number, y: number, z: number): Vector3 => ({ x, y, z });
+
+export const SECTION_CONFIGS: Record<Section, SectionConfig> = {
   hero: {
     desktop: {
-      scale: { x: 0.7, y: 0.7, z: 0.7 },
-      position: { x: 450, y: -100, z: 0 },
-      rotation: { x: 0.2, y: -0.5, z: 0 },
+      position: createVector(400, -100, 0),
+      rotation: createVector(0.2, -0.5, 0),
+      scale: createVector(1.0, 1.0, 1.0),
     },
     mobile: {
-      scale: { x: 0.5, y: 0.5, z: 0.5 },
-      position: { x: 0, y: -250, z: 0 },
-      rotation: { x: 0.2, y: -0.5, z: 0 },
-    },
-  },
-  about: {
-    desktop: {
-      scale: { x: 1.0, y: 1.0, z: 1.0 },
-      position: { x: 0, y: -50, z: 0 },
-      rotation: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
-    },
-    mobile: {
-      scale: { x: 0.8, y: 0.8, z: 0.8 },
-      position: { x: 0, y: -50, z: 0 },
-      rotation: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      position: createVector(0, -250, 0),
+      rotation: createVector(0.2, -0.5, 0),
+      scale: createVector(0.7, 0.7, 0.7),
     },
   },
   skills: {
     desktop: {
-      scale: { x: 1.1, y: 1.1, z: 1.1 },
-      position: { x: 0, y: -50, z: 0 },
-      rotation: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      position: createVector(0, -50, 0),
+      rotation: createVector(-1.57, 0, 0),
+      scale: createVector(1.2, 1.2, 1.2),
     },
     mobile: {
-      scale: { x: 0.9, y: 0.9, z: 0.9 },
-      position: { x: 0, y: -50, z: 0 },
-      rotation: {
-        x: 0,
-        y: 0,
-        z: 0,
-      },
+      position: createVector(0, 0, 0),
+      rotation: createVector(-1.57, 0, 0),
+      scale: createVector(0.8, 0.8, 0.8),
     },
   },
   projects: {
     desktop: {
-      scale: { x: 1.0, y: 1.0, z: 1.0 },
-      position: { x: 0, y: -50, z: 0 },
-      rotation: {
-        x: 0.2,
-        y: 3.14,
-        z: 0,
-      },
+      position: createVector(0, -50, 0),
+      rotation: createVector(1.57, 0, 0),
+      scale: createVector(1.2, 1.2, 1.2),
     },
     mobile: {
-      scale: { x: 0.8, y: 0.8, z: 0.8 },
-      position: { x: 0, y: 100, z: 0 },
-      rotation: {
-        x: 0.2,
-        y: 3.14,
-        z: 0,
-      },
+      position: createVector(0, 100, 0),
+      rotation: createVector(1.57, 0, 0),
+      scale: createVector(0.8, 0.8, 0.8),
+    },
+  },
+  experience: {
+    desktop: {
+      position: createVector(-100, 0, 0),
+      rotation: createVector(0, 0.5, 0),
+      scale: createVector(1.2, 1.2, 1.2),
+    },
+    mobile: {
+      position: createVector(0, 0, 0),
+      rotation: createVector(0, 0.5, 0),
+      scale: createVector(0.8, 0.8, 0.8),
     },
   },
   contact: {
     desktop: {
-      scale: { x: 0.7, y: 0.7, z: 0.7 },
-      position: { x: 400, y: -150, z: 0 },
-      rotation: {
-        x: 0,
-        y: 0.5,
-        z: 0,
-      },
+      position: createVector(400, -150, 0),
+      rotation: createVector(0, 0.5, 0),
+      scale: createVector(1.0, 1.0, 1.0),
     },
     mobile: {
-      scale: { x: 0.5, y: 0.5, z: 0.5 },
-      position: { x: 0, y: 100, z: 0 },
-      rotation: {
-        x: 0,
-        y: 0.5,
-        z: 0,
-      },
+      position: createVector(0, 100, 0),
+      rotation: createVector(0, 0.5, 0),
+      scale: createVector(0.7, 0.7, 0.7),
     },
   },
 };
 
-export const getKeyboardState = ({
+export function getKeyboardState({
   section,
   isMobile,
 }: {
   section: Section;
   isMobile: boolean;
-}) => {
-  const baseTransform = STATES[section][isMobile ? "mobile" : "desktop"];
+}): KeyboardState {
+  const config = SECTION_CONFIGS[section] || SECTION_CONFIGS.hero;
+  const baseTransform = isMobile ? config.mobile : config.desktop;
 
   const getScaleOffset = () => {
+    if (typeof window === "undefined") return 1;
     const width = window.innerWidth;
     const DESKTOP_REF_WIDTH = 1280;
     const MOBILE_REF_WIDTH = 390;
@@ -124,9 +109,9 @@ export const getKeyboardState = ({
   return {
     ...baseTransform,
     scale: {
-      x: Math.abs(baseTransform.scale.x * scaleOffset),
-      y: Math.abs(baseTransform.scale.y * scaleOffset),
-      z: Math.abs(baseTransform.scale.z * scaleOffset),
+      x: baseTransform.scale.x * scaleOffset,
+      y: baseTransform.scale.y * scaleOffset,
+      z: baseTransform.scale.z * scaleOffset,
     },
   };
-};
+}
