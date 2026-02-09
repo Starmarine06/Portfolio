@@ -75,7 +75,6 @@ const AnimatedBackground = () => {
       if (selectedSkillRef.current) playReleaseSound();
       setSelectedSkill(null);
       selectedSkillRef.current = null;
-      setSplineVariables("", "");
     } else {
       const skillKey = SPLINE_TO_SKILL_MAP[e.target.name] || (e.target.name as SkillNames);
       if (!selectedSkillRef.current || selectedSkillRef.current.name !== skillKey) {
@@ -88,7 +87,7 @@ const AnimatedBackground = () => {
         }
       }
     }
-  }, [splineApp, playPressSound, playReleaseSound, setSplineVariables]);
+  }, [splineApp, playPressSound, playReleaseSound]);
 
   const handleSplineInteractions = useCallback(() => {
     if (!splineApp) return;
@@ -106,7 +105,8 @@ const AnimatedBackground = () => {
     splineApp.addEventListener("keyUp", () => {
       if (!splineApp || isInputFocused()) return;
       playReleaseSound();
-      setSplineVariables("", "");
+      setSelectedSkill(null);
+      selectedSkillRef.current = null;
     });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp || isInputFocused()) return;
@@ -116,7 +116,6 @@ const AnimatedBackground = () => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        setSplineVariables(skill.label, skill.shortDescription);
       }
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
@@ -127,7 +126,6 @@ const AnimatedBackground = () => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        setSplineVariables(skill.label, skill.shortDescription);
 
         const target = splineApp.findObjectByName(e.target.name);
         if (target) {
@@ -142,7 +140,7 @@ const AnimatedBackground = () => {
         }
       }
     });
-  }, [splineApp, handleMouseHover, playPressSound, playReleaseSound, setSplineVariables]);
+  }, [splineApp, handleMouseHover, playPressSound, playReleaseSound]);
 
   // --- Animation Setup Helpers ---
 
@@ -267,14 +265,23 @@ const AnimatedBackground = () => {
   }, [splineApp, isMobile, handleSplineInteractions, setupScrollAnimations]);
 
   useEffect(() => {
-    if (!selectedSkill || !splineApp) return;
-    setSplineVariables(selectedSkill.label, selectedSkill.shortDescription);
+    if (!splineApp) return;
+    if (selectedSkill) {
+      setSplineVariables(selectedSkill.label, selectedSkill.shortDescription);
 
-    // Fallback for models without variables
-    const textObj = splineApp.findObjectByName("Text");
-    if (textObj) {
-      // @ts-ignore
-      textObj.text = `${selectedSkill.label}\n${selectedSkill.shortDescription}`;
+      // Fallback for models without variables
+      const textObj = splineApp.findObjectByName("Text");
+      if (textObj) {
+        // @ts-ignore
+        textObj.text = `${selectedSkill.label}\n${selectedSkill.shortDescription}`;
+      }
+    } else {
+      setSplineVariables("", "");
+      const textObj = splineApp.findObjectByName("Text");
+      if (textObj) {
+        // @ts-ignore
+        textObj.text = "";
+      }
     }
   }, [selectedSkill, splineApp, setSplineVariables]);
 
@@ -298,7 +305,8 @@ const AnimatedBackground = () => {
 
     const manageAnimations = async () => {
       if (activeSection !== "skills") {
-        setSplineVariables("", "");
+        setSelectedSkill(null);
+        selectedSkillRef.current = null;
       }
 
       if (activeSection === "hero") {
@@ -313,7 +321,7 @@ const AnimatedBackground = () => {
     return () => {
       rotateKeyboard?.kill();
     };
-  }, [activeSection, splineApp, setSplineVariables]);
+  }, [activeSection, splineApp]);
 
   // Reveal keyboard on load/route change
   useEffect(() => {

@@ -20,60 +20,60 @@ export const SECTION_CONFIGS: Record<Section, SectionConfig> = {
     desktop: {
       position: createVector(400, -100, 0),
       rotation: createVector(0.2, -0.5, 0),
-      scale: createVector(1.0, 1.0, 1.0),
+      scale: createVector(0.1, 0.1, 0.1),
     },
     mobile: {
       position: createVector(0, -250, 0),
       rotation: createVector(0.2, -0.5, 0),
-      scale: createVector(0.7, 0.7, 0.7),
+      scale: createVector(0.07, 0.07, 0.07),
     },
   },
   skills: {
     desktop: {
       position: createVector(0, -50, 0),
       rotation: createVector(-1.57, 0, 0),
-      scale: createVector(1.2, 1.2, 1.2),
+      scale: createVector(0.12, 0.12, 0.12),
     },
     mobile: {
       position: createVector(0, 0, 0),
       rotation: createVector(-1.57, 0, 0),
-      scale: createVector(0.8, 0.8, 0.8),
+      scale: createVector(0.08, 0.08, 0.08),
     },
   },
   projects: {
     desktop: {
       position: createVector(0, -50, 0),
       rotation: createVector(1.57, 0, 0),
-      scale: createVector(1.2, 1.2, 1.2),
+      scale: createVector(0.12, 0.12, 0.12),
     },
     mobile: {
       position: createVector(0, 100, 0),
       rotation: createVector(1.57, 0, 0),
-      scale: createVector(0.8, 0.8, 0.8),
+      scale: createVector(0.08, 0.08, 0.08),
     },
   },
   experience: {
     desktop: {
       position: createVector(-100, 0, 0),
       rotation: createVector(0, 0.5, 0),
-      scale: createVector(1.2, 1.2, 1.2),
+      scale: createVector(0.12, 0.12, 0.12),
     },
     mobile: {
       position: createVector(0, 0, 0),
       rotation: createVector(0, 0.5, 0),
-      scale: createVector(0.8, 0.8, 0.8),
+      scale: createVector(0.08, 0.08, 0.08),
     },
   },
   contact: {
     desktop: {
       position: createVector(400, -150, 0),
       rotation: createVector(0, 0.5, 0),
-      scale: createVector(1.0, 1.0, 1.0),
+      scale: createVector(0.1, 0.1, 0.1),
     },
     mobile: {
       position: createVector(0, 100, 0),
       rotation: createVector(0, 0.5, 0),
-      scale: createVector(0.7, 0.7, 0.7),
+      scale: createVector(0.07, 0.07, 0.07),
     },
   },
 };
