@@ -1,5 +1,5 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState, useCallback } from "react";
 import { Application, SPEObject, SplineEvent } from "@splinetool/runtime";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -16,20 +16,26 @@ import { useSounds } from "./realtime/hooks/use-sounds";
 gsap.registerPlugin(ScrollTrigger);
 
 const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
-  linux: SkillNames.PYTHON,
-  mongodb: SkillNames.NUMPY,
-  express: SkillNames.PANDAS,
-  firebase: SkillNames.PYTORCH,
-  nodejs: SkillNames.TENSORFLOW,
-  tailwind: SkillNames.SCIKIT,
+  js: SkillNames.JAVASCRIPT,
+  ts: SkillNames.TYPESCRIPT,
+  html: SkillNames.HTML,
+  css: SkillNames.CSS,
   react: SkillNames.REACT,
+  vue: SkillNames.VITE, // Vue is mapped to Vite as a fallback
+  nextjs: SkillNames.NEXTJS,
+  tailwind: SkillNames.TAILWIND,
+  nodejs: SkillNames.NODEJS,
+  express: SkillNames.EXPRESS,
+  postgres: SkillNames.POSTGRES,
+  mongodb: SkillNames.MONGODB,
+  git: SkillNames.GIT,
   github: SkillNames.GITHUB,
-  nextjs: SkillNames.VITE,
-  html: SkillNames.REACT,
-  css: SkillNames.VITE,
-  npm: SkillNames.GITHUB,
-  javascript: SkillNames.JAVASCRIPT,
-  typescript: SkillNames.TYPESCRIPT,
+  npm: SkillNames.GITHUB, // Fallback
+  firebase: SkillNames.FIREBASE,
+  linux: SkillNames.PYTHON, // Fallback
+  docker: SkillNames.DOCKER,
+  aws: SkillNames.AWS,
+  python: SkillNames.PYTHON,
 };
 
 const AnimatedBackground = () => {
@@ -45,26 +51,31 @@ const AnimatedBackground = () => {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [activeSection, setActiveSection] = useState<Section>("hero");
 
-  // Animation controllers refs
-  const bongoAnimationRef = useRef<{ start: () => void; stop: () => void }>();
-  const keycapAnimationsRef = useRef<{ start: () => void; stop: () => void }>();
-
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
   const router = useRouter();
 
+  // --- Helper Functions ---
+
+  const setSplineVariables = useCallback((heading: string, description: string) => {
+    if (!splineApp) return;
+    try {
+      splineApp.setVariable("headingl", heading);
+      splineApp.setVariable("desc", description);
+    } catch (e) {
+      // Silently fail if variables are not in the model
+    }
+  }, [splineApp]);
+
   // --- Event Handlers ---
 
-  const handleMouseHover = (e: SplineEvent) => {
+  const handleMouseHover = useCallback((e: SplineEvent) => {
     if (!splineApp || selectedSkillRef.current?.name === e.target.name) return;
 
-    if (e.target.name === "body" || e.target.name === "platform" || e.target.name === "iPhone 14 Pro" || e.target.name === "Body-Screen") {
+    if (e.target.name === "body" || e.target.name === "platform" || e.target.name === "keyboard" || e.target.name === "Body-Screen") {
       if (selectedSkillRef.current) playReleaseSound();
       setSelectedSkill(null);
       selectedSkillRef.current = null;
-      if (splineApp.getVariable("headingl") && splineApp.getVariable("desc")) {
-        splineApp.setVariable("headingl", "");
-        splineApp.setVariable("desc", "");
-      }
+      setSplineVariables("", "");
     } else {
       const skillKey = SPLINE_TO_SKILL_MAP[e.target.name] || (e.target.name as SkillNames);
       if (!selectedSkillRef.current || selectedSkillRef.current.name !== skillKey) {
@@ -77,9 +88,9 @@ const AnimatedBackground = () => {
         }
       }
     }
-  };
+  }, [splineApp, playPressSound, playReleaseSound, setSplineVariables]);
 
-  const handleSplineInteractions = () => {
+  const handleSplineInteractions = useCallback(() => {
     if (!splineApp) return;
 
     const isInputFocused = () => {
@@ -95,8 +106,7 @@ const AnimatedBackground = () => {
     splineApp.addEventListener("keyUp", () => {
       if (!splineApp || isInputFocused()) return;
       playReleaseSound();
-      splineApp.setVariable("headingl", "");
-      splineApp.setVariable("desc", "");
+      setSplineVariables("", "");
     });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp || isInputFocused()) return;
@@ -106,8 +116,7 @@ const AnimatedBackground = () => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        splineApp.setVariable("headingl", skill.label);
-        splineApp.setVariable("desc", skill.shortDescription);
+        setSplineVariables(skill.label, skill.shortDescription);
       }
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
@@ -118,8 +127,7 @@ const AnimatedBackground = () => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        splineApp.setVariable("headingl", skill.label);
-        splineApp.setVariable("desc", skill.shortDescription);
+        setSplineVariables(skill.label, skill.shortDescription);
 
         const target = splineApp.findObjectByName(e.target.name);
         if (target) {
@@ -134,11 +142,11 @@ const AnimatedBackground = () => {
         }
       }
     });
-  };
+  }, [splineApp, handleMouseHover, playPressSound, playReleaseSound, setSplineVariables]);
 
   // --- Animation Setup Helpers ---
 
-  const createSectionTimeline = (
+  const createSectionTimeline = useCallback((
     triggerId: string,
     targetSection: Section,
     prevSection: Section,
@@ -146,7 +154,7 @@ const AnimatedBackground = () => {
     end: string = "bottom bottom"
   ) => {
     if (!splineApp) return;
-    const kbd = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard");
+    const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
     gsap.timeline({
@@ -171,11 +179,11 @@ const AnimatedBackground = () => {
         },
       },
     });
-  };
+  }, [splineApp, isMobile]);
 
-  const setupScrollAnimations = () => {
+  const setupScrollAnimations = useCallback(() => {
     if (!splineApp || !splineContainer.current) return;
-    const kbd = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard");
+    const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
     // Initial state
@@ -188,19 +196,11 @@ const AnimatedBackground = () => {
     createSectionTimeline("#skills", "skills", "hero");
     createSectionTimeline("#projects", "projects", "skills", "top 70%");
     createSectionTimeline("#contact", "contact", "projects", "top 30%");
-  };
+  }, [splineApp, isMobile, createSectionTimeline]);
 
-  const getBongoAnimation = () => {
-    return { start: () => { }, stop: () => { } };
-  };
-
-  const getKeycapsAnimation = () => {
-    return { start: () => { }, stop: () => { } };
-  };
-
-  const updateKeyboardTransform = async () => {
+  const updateKeyboardTransform = useCallback(async () => {
     if (!splineApp) return;
-    const kbd = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard");
+    const kbd = splineApp.findObjectByName("keyboard");
     if (!kbd) return;
 
     kbd.visible = false;
@@ -235,7 +235,7 @@ const AnimatedBackground = () => {
         { x: 1, y: 1, z: 1, duration: 0.5, ease: "back.out(1.7)" }
       );
     });
-  };
+  }, [splineApp, activeSection, isMobile]);
 
   // --- Effects ---
 
@@ -264,20 +264,26 @@ const AnimatedBackground = () => {
       clearInterval(timer);
     }
 
-  }, [splineApp, isMobile]);
+  }, [splineApp, isMobile, handleSplineInteractions, setupScrollAnimations]);
 
   useEffect(() => {
     if (!selectedSkill || !splineApp) return;
-    splineApp.setVariable("headingl", selectedSkill.label);
-    splineApp.setVariable("desc", selectedSkill.shortDescription);
-  }, [selectedSkill]);
+    setSplineVariables(selectedSkill.label, selectedSkill.shortDescription);
+
+    // Fallback for models without variables
+    const textObj = splineApp.findObjectByName("Text");
+    if (textObj) {
+      // @ts-ignore
+      textObj.text = `${selectedSkill.label}\n${selectedSkill.shortDescription}`;
+    }
+  }, [selectedSkill, splineApp, setSplineVariables]);
 
   // Handle rotation and teardown animations based on active section
   useEffect(() => {
     if (!splineApp) return;
 
     let rotateKeyboard: gsap.core.Tween | undefined;
-    const kbd = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard");
+    const kbd = splineApp.findObjectByName("keyboard");
 
     if (kbd) {
       rotateKeyboard = gsap.to(kbd.rotation, {
@@ -292,8 +298,7 @@ const AnimatedBackground = () => {
 
     const manageAnimations = async () => {
       if (activeSection !== "skills") {
-        splineApp.setVariable("headingl", "");
-        splineApp.setVariable("desc", "");
+        setSplineVariables("", "");
       }
 
       if (activeSection === "hero") {
@@ -308,7 +313,7 @@ const AnimatedBackground = () => {
     return () => {
       rotateKeyboard?.kill();
     };
-  }, [activeSection, splineApp]);
+  }, [activeSection, splineApp, setSplineVariables]);
 
   // Reveal keyboard on load/route change
   useEffect(() => {
@@ -317,7 +322,7 @@ const AnimatedBackground = () => {
 
     if (!splineApp || isLoading || keyboardRevealed) return;
     updateKeyboardTransform();
-  }, [splineApp, isLoading, activeSection]);
+  }, [splineApp, isLoading, activeSection, keyboardRevealed, router, updateKeyboardTransform]);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -329,7 +334,7 @@ const AnimatedBackground = () => {
           (window as any).spline = app;
           bypassLoading();
         }}
-        scene="https://my.spline.design/skillskeyboard-jVDuxaTuaIbrR4WL6hRBQmSb/"
+        scene="/assets/skills-keyboard.spline"
       />
     </Suspense>
   );
