@@ -5,13 +5,20 @@ export const useViewport = () => {
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handleResize = () => {
       setWidth(window.innerWidth);
       setHeight(window.innerHeight);
     };
-    if (typeof window !== "undefined")
-      window.addEventListener("resize", handleResize);
+
+    // Set initial dimensions
+    setWidth(window.innerWidth);
+    setHeight(window.innerHeight);
+
+    window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  });
+  }, []);
+
   return { width, height };
 };
