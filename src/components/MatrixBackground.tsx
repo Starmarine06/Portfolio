@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 
 const MatrixBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { resolvedTheme } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -15,7 +17,10 @@ const MatrixBackground = () => {
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
 
-    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}[]<>@";
+    const isDark = resolvedTheme === "dark";
+    const characters = isDark
+      ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}[]<>@"
+      : "01";
     const fontSize = 16;
     const columns = Math.floor(width / fontSize);
 
@@ -25,24 +30,40 @@ const MatrixBackground = () => {
     }
 
     const draw = () => {
-      // Dark blue-black background for a deeper Matrix feel
-      ctx.fillStyle = "rgba(0, 5, 15, 0.15)";
+      // Background color based on theme
+      ctx.fillStyle = isDark
+        ? "rgba(0, 5, 15, 0.15)"
+        : "rgba(255, 255, 255, 0.15)";
       ctx.fillRect(0, 0, width, height);
 
       ctx.font = "bold " + fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(Math.floor(Math.random() * characters.length));
+        const text = characters.charAt(
+          Math.floor(Math.random() * characters.length)
+        );
 
-        // Leading character or random highlights are white/pale blue
-        if (Math.random() > 0.95) {
-          ctx.fillStyle = "#e0f7ff";
-          ctx.shadowBlur = 20;
-          ctx.shadowColor = "#00f0ff";
+        // Colors based on theme
+        if (isDark) {
+          if (Math.random() > 0.95) {
+            ctx.fillStyle = "#e0f7ff";
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "#00f0ff";
+          } else {
+            ctx.fillStyle = "#00a2ff";
+            ctx.shadowBlur = 5;
+            ctx.shadowColor = "#0055ff";
+          }
         } else {
-          ctx.fillStyle = "#00a2ff";
-          ctx.shadowBlur = 5;
-          ctx.shadowColor = "#0055ff";
+          // Light mode: Black characters, no glow or slight gray glow
+          if (Math.random() > 0.95) {
+            ctx.fillStyle = "#000000";
+            ctx.shadowBlur = 0;
+          } else {
+            ctx.fillStyle = "#333333";
+            ctx.shadowBlur = 0;
+          }
+          ctx.shadowColor = "transparent";
         }
 
         ctx.fillText(text, i * fontSize, drops[i] * fontSize);
@@ -51,7 +72,7 @@ const MatrixBackground = () => {
           drops[i] = 0;
         }
 
-        drops[i] += 1.2; // Slightly faster fall
+        drops[i] += 1.2;
       }
     };
 
@@ -73,12 +94,12 @@ const MatrixBackground = () => {
       clearInterval(interval);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [resolvedTheme]);
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-50 dark:opacity-30"
+      className="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-80 dark:opacity-30"
     />
   );
 };

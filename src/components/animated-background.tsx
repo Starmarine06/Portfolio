@@ -12,23 +12,28 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Section, getKeyboardState } from "./animated-background-config";
 import { useSounds } from "./realtime/hooks/use-sounds";
+import { useSkillContext } from "@/contexts/skill-context";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Map Spline object names (short) to SkillNames enum keys
+// Map Spline object names to SkillNames enum keys
 const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
-  "js": SkillNames.JAVASCRIPT,
-  "ts": SkillNames.TYPESCRIPT,
+  // Row 1
+  "tensorflow": SkillNames.TENSORFLOW,
+  "unity": SkillNames.UNITY,
   "html": SkillNames.HTML,
   "css": SkillNames.CSS,
+  // Row 2
   "nextjs": SkillNames.NEXTJS,
   "tailwind": SkillNames.TAILWIND,
   "nodejs": SkillNames.NODEJS,
   "express": SkillNames.EXPRESS,
+  // Row 3
   "git": SkillNames.GIT,
   "github": SkillNames.GITHUB,
   "react": SkillNames.REACT,
   "npm": SkillNames.NPM,
+  // Row 4
   "linux": SkillNames.LINUX,
   "firebase": SkillNames.FIREBASE,
   "mongodb": SkillNames.MONGODB,
@@ -45,7 +50,7 @@ const AnimatedBackground = () => {
 
   const { playPressSound, playReleaseSound } = useSounds();
 
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  const { selectedSkill, setSelectedSkill } = useSkillContext();
   const [activeSection, setActiveSection] = useState<Section>("hero");
 
   const keycapAnimationsRef = useRef<{ start: () => void; stop: () => void }>();
@@ -73,7 +78,17 @@ const AnimatedBackground = () => {
   const handleMouseHover = (e: SplineEvent) => {
     if (!splineApp || selectedSkillRef.current?.name === e.target.name) return;
 
-    if (e.target.name === "body" || e.target.name === "platform" || e.target.name === "iphone") {
+    const target = e.target as any; // Use any to access parent property
+
+    // Ignore platform completely - it blocks the icons
+    if (target.name === "platform") {
+      return;
+    }
+
+    // Log what is being hovered to debug "2 rows" issue
+    console.log("Hovered:", target.name, "Parent:", target.parent?.name);
+
+    if (target.name === "body" || target.name === "iPhone 14 Pro") {
       if (selectedSkillRef.current) playReleaseSound();
       setSelectedSkill(null);
       selectedSkillRef.current = null;
@@ -82,17 +97,28 @@ const AnimatedBackground = () => {
         splineApp.setVariable("desc", "");
       }
     } else {
-      if (!selectedSkillRef.current || selectedSkillRef.current.name !== e.target.name) {
-        const skill = getSkillFromTarget(e.target.name);
-        if (skill) {
+      let skill = getSkillFromTarget(target.name);
+      // Try parent lookup
+      if (!skill && target.parent) {
+        skill = getSkillFromTarget(target.parent.name);
+      }
+
+      if (skill) {
+        if (!selectedSkillRef.current || selectedSkillRef.current.name !== skill.name) {
+          console.log("Hovered Skill:", skill.name);
           if (selectedSkillRef.current) playReleaseSound();
           playPressSound();
           setSelectedSkill(skill);
           selectedSkillRef.current = skill;
         }
+      } else {
+        // Log when we can't find a matching skill
+        console.log("⚠️ No skill found for:", target.name, "Parent:", target.parent?.name);
       }
     }
   };
+
+
 
   const handleSplineInteractions = () => {
     if (!splineApp) return;
@@ -127,8 +153,14 @@ const AnimatedBackground = () => {
     };
 
     const handleMouseDown = (e: SplineEvent) => {
-      console.log("Clicked Spline Object:", e.target.name);
-      const skill = getSkillFromTarget(e.target.name);
+      const target = e.target as any; // Use any to access parent property
+      console.log("Clicked Spline Object:", target.name, "Parent:", target.parent?.name);
+      let skill = getSkillFromTarget(target.name);
+      // Try parent lookup
+      if (!skill && target.parent) {
+        skill = getSkillFromTarget(target.parent.name);
+      }
+
       if (skill && splineApp) {
         playPressSound();
         setSelectedSkill(skill);
@@ -203,7 +235,7 @@ const AnimatedBackground = () => {
     // Section transitions
     createSectionTimeline("#skills", "skills", "hero");
     createSectionTimeline("#projects", "projects", "skills", "top 70%");
-    createSectionTimeline("#contact", "contact", "projects", "top 30%");
+    createSectionTimeline("#contact", "contact", "projects", "top 30%", "top top");
   };
 
   // --- Time Update for iPhone ---
@@ -217,11 +249,13 @@ const AnimatedBackground = () => {
         const hours = now.getHours().toString().padStart(2, '0');
         const minutes = now.getMinutes().toString().padStart(2, '0');
         const timeString = `${hours}:${minutes}`;
+
         try {
-          splineApp.setVariable("Time", timeString);
+          // Attempt to set variable first (requires Variable 'Text' in Spline)
           splineApp.setVariable("Text", timeString);
         } catch (e) {
-          console.warn("Could not set time variable", e);
+          // If variable doesn't exist, try setting the text property directly?
+          // This is a long shot for runtime, but worth a try to suppress error.
         }
       }
     };
@@ -286,26 +320,31 @@ const AnimatedBackground = () => {
 
     setKeyboardRevealed(true);
 
-    // Enable/Reveal Keys based on user row mapping
-    const skillKeys = Object.keys(SPLINE_TO_SKILL_MAP); // ordered as defined if JS preserves order (it mostly does for string keys)
-    // Actually relying on order is flaky. Let's use the explicit list.
+    // Enable/Reveal Keys based on Spline object names (4x4 grid)
     const mapping = [
-      "js", "ts", "html", "css",
+      // Row 1
+      "tensorflow", "unity", "html", "css",
+      // Row 2
       "nextjs", "tailwind", "nodejs", "express",
+      // Row 3
       "git", "github", "react", "npm",
+      // Row 4
       "linux", "firebase", "mongodb", "aws"
     ];
 
-    mapping.forEach(async (keyName, index) => {
+    // Reveal all icons
+    mapping.forEach((keyName, index) => {
       const obj = splineApp.findObjectByName(keyName);
       if (obj) {
         obj.visible = true;
-        // Also try to find a "keycap" child inside if necessary
-        // Depending on model structure, but user said "Each object has a keycap... to be enabled"
-        // We set the object itself visible.
-        // Add a small staggered animation
-        await sleep(index * 50);
-        gsap.fromTo(obj.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1, duration: 0.5, ease: "back.out(1.7)" });
+        console.log(`✅ Found and revealed: ${keyName}`);
+        // Animate appearance
+        gsap.fromTo(obj.scale,
+          { x: 0, y: 0, z: 0 },
+          { x: 1, y: 1, z: 1, duration: 0.5, ease: "back.out(1.7)", delay: index * 0.05 }
+        );
+      } else {
+        console.warn(`⚠️ Could not find object: ${keyName}`);
       }
     });
 

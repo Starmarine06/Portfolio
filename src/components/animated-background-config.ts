@@ -3,13 +3,13 @@ export type Section = "hero" | "about" | "skills" | "experience" | "projects" | 
 export const STATES = {
   hero: {
     desktop: {
-      scale: { x: 1, y: 1, z: 1 },
-      position: { x: 225, y: -100, z: 0 },
-      rotation: { x: 0, y: 0, z: 0 },
+      scale: { x: 1.5, y: 1.5, z: 1.5 },
+      position: { x: 100, y: -100, z: 500 },
+      rotation: { x: 0, y: Math.PI, z: 0 },
     },
     mobile: {
-      scale: { x: 0.30, y: 0.30, z: 0.30 },
-      position: { x: 0, y: -200, z: 0 },
+      scale: { x: 0.5, y: 0.5, z: 0.5 },
+      position: { x: 0, y: -100, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
     },
   },
@@ -55,60 +55,60 @@ export const STATES = {
   },
   skills: {
     desktop: {
-      scale: { x: 1, y: 1, z: 1 },
-      position: { x: 0, y: -40, z: 0 },
+      scale: { x: 1.5, y: 1.5, z: 1.5 },
+      position: { x: 0, y: -300, z: 0 },
       rotation: {
         x: 0,
-        y: -45,
+        y: -85 * (Math.PI / 180),
         z: 0,
       },
     },
     mobile: {
-      scale: { x: 0.3, y: 0.3, z: 0.3 },
-      position: { x: 0, y: -40, z: 0 },
+      scale: { x: 0.6, y: 0.6, z: 0.6 },
+      position: { x: 0, y: 0, z: 0 },
       rotation: {
         x: 0,
-        y: Math.PI / 6,
+        y: Math.PI / 4,
         z: 0,
       },
     },
   },
   projects: {
     desktop: {
-      scale: { x: 1, y: 1, z: 1 },
+      scale: { x: 1.5, y: 1.5, z: 1.5 },
       position: { x: 0, y: -40, z: 0 },
       rotation: {
-        x: Math.PI,
-        y: Math.PI / 3,
-        z: Math.PI,
+        x: 0.1,
+        y: Math.PI / 6,
+        z: 0,
       },
     },
     mobile: {
-      scale: { x: 0.25, y: 0.25, z: 0.25 },
-      position: { x: 0, y: 150, z: 0 },
+      scale: { x: 0.5, y: 0.5, z: 0.5 },
+      position: { x: 0, y: 100, z: 0 },
       rotation: {
-        x: Math.PI,
-        y: Math.PI / 3,
-        z: Math.PI,
+        x: 0.1,
+        y: Math.PI / 6,
+        z: 0,
       },
     },
   },
   contact: {
     desktop: {
-      scale: { x: 1, y: 1, z: 1 },
-      position: { x: 350, y: -250, z: 0 },
+      scale: { x: 1.3, y: 1.3, z: 1.3 },
+      position: { x: 0, y: 0, z: 700 },
       rotation: {
         x: 0,
-        y: 0,
+        y: -Math.PI / 6,
         z: 0,
       },
     },
     mobile: {
-      scale: { x: 0.25, y: 0.25, z: 0.25 },
-      position: { x: 0, y: 150, z: 0 },
+      scale: { x: 0.5, y: 0.5, z: 0.5 },
+      position: { x: 0, y: 80, z: 0 },
       rotation: {
         x: 0,
-        y: 0,
+        y: -Math.PI / 6,
         z: 0,
       },
     },
@@ -136,8 +136,8 @@ export const getKeyboardState = ({
       : width / DESKTOP_REF_WIDTH;
 
     // Clamp values to prevent extremes
-    const minScale = isMobile ? 0.5 : 0.5;
-    const maxScale = isMobile ? 0.6 : 1.15;
+    const minScale = isMobile ? 0.5 : 0.8;
+    const maxScale = isMobile ? 0.9 : 2.0;
 
     return Math.min(Math.max(targetScale, minScale), maxScale);
   };

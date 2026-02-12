@@ -21,22 +21,21 @@ const config = {
     "Framer Motion",
   ],
   author: "Dev Nambiar",
-  email: "dev.nambiar@example.com",
+  email: "devnambiar06@gmail.com",
   site: "https://devnambiar.site",
 
   // for github stars button
-  githubUsername: "dev-nambiar",
-  githubRepo: "3d-portfolio",
+  githubUsername: "Starmarine06",
+  githubRepo: "Portfolio",
 
   get ogImg() {
     return this.site + "/assets/seo/og-image.png";
   },
   social: {
-    twitter: "https://x.com/devnambiar",
-    linkedin: "https://www.linkedin.com/in/dev-nambiar/",
-    instagram: "https://www.instagram.com/devnambiar",
-    facebook: "https://www.facebook.com/devnambiar/",
-    github: "https://github.com/dev-nambiar",
+    linkedin: "https://www.linkedin.com/in/dev-nambiar-0482a9342/",
+    instagram: "https://www.instagram.com/dev.nambiar06",
+    facebook: "https://www.facebook.com/dev.nambiar06/",
+    github: "https://github.com/Starmarine06",
   },
 };
 export { config };

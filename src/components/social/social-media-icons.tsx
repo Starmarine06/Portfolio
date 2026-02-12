@@ -19,11 +19,6 @@ const BUTTONS = [
     icon: <SiLinkedin size={"24"} color={"#fff"} />,
   },
   {
-    name: "Twitter",
-    href: config.social.twitter,
-    icon: <SiX size={"24"} color={"#fff"} />,
-  },
-  {
     name: "Instagram",
     href: config.social.instagram,
     icon: <SiInstagram size={"24"} color={"#fff"} />,
