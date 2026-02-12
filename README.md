@@ -16,7 +16,6 @@ Welcome to the repository for my personal portfolio website! This is where I sho
 
 - **Frontend**: Next.js, React, Tailwind CSS, Shadcn, Aceternity UI
 - **Animations**: GSAP, Framer Motion, Spline Runtime
-- **Misc**: Resend, Socketio, Zod
 
 ## 🚀 Getting Started
 
@@ -57,13 +56,6 @@ Welcome to the repository for my personal portfolio website! This is where I sho
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the magic!
 
-## 🚀 Deployment
-
-This site is deployed on Vercel. For your own deployment, follow these steps:
-
-1. Push your code to a GitHub repository.
-2. Connect your repository to Vercel.
-3. Vercel will handle the deployment process.
 
 ## 🤝 Contributing
 
