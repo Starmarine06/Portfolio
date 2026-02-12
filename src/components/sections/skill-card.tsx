@@ -49,74 +49,79 @@ const SkillCard: React.FC<SkillCardProps> = ({ skill, position, className }) => 
     };
 
     return (
-        <AnimatePresence>
-            <motion.div
-                initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8, y: 20 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-                style={{
-                    position: 'absolute',
-                    left: position?.x || '50%',
-                    top: position?.y || '50%',
-                    transform: 'translate(-50%, -50%)',
-                }}
-                className={cn(
-                    'skill-card',
-                    'w-80 p-6 rounded-2xl',
-                    'bg-white/10 dark:bg-black/20',
-                    'backdrop-blur-xl',
-                    'border border-white/20 dark:border-white/10',
-                    'shadow-2xl shadow-black/50',
-                    'pointer-events-auto',
-                    className
-                )}
-            >
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-white mb-1">{skill.label}</h3>
-                        <div className="flex items-center gap-2">
-                            {renderProficiency(skill.proficiency)}
-                            {skill.yearsOfExperience && (
-                                <span className="text-xs text-gray-400">
-                                    {skill.yearsOfExperience}+ years
-                                </span>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Keyboard shortcut badge */}
-                    {skill.keyboardShortcut && (
-                        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 border border-white/20">
-                            <span className="text-sm font-mono font-bold text-white">
-                                {skill.keyboardShortcut}
+        <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 20, filter: 'blur(10px)' }}
+            animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{
+                opacity: 0,
+                scale: 0.5,
+                y: -50,
+                rotate: 5,
+                filter: 'blur(15px)',
+                transition: { duration: 0.4, ease: 'backIn' }
+            }}
+            transition={{ duration: 0.4, type: 'spring', damping: 20, stiffness: 100 }}
+            style={{
+                position: 'absolute',
+                left: position?.x || '50%',
+                top: position?.y || '50%',
+                transform: 'translate(-50%, -50%)',
+            }}
+            className={cn(
+                'skill-card',
+                'w-80 p-6 rounded-2xl',
+                'bg-white/10 dark:bg-black/20',
+                'backdrop-blur-xl',
+                'border border-white/20 dark:border-white/10',
+                'shadow-2xl shadow-black/50',
+                'pointer-events-auto',
+                className
+            )}
+        >
+            {/* Header */}
+            <div className="flex items-start justify-between mb-4">
+                <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-white mb-1">{skill.label}</h3>
+                    <div className="flex items-center gap-2">
+                        {renderProficiency(skill.proficiency)}
+                        {skill.yearsOfExperience && (
+                            <span className="text-xs text-gray-400">
+                                {skill.yearsOfExperience}+ years
                             </span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Category badge */}
-                <div className="mb-4">
-                    <span
-                        className={cn(
-                            'inline-block px-3 py-1 rounded-full text-xs font-semibold border',
-                            getCategoryColor(skill.category)
                         )}
-                    >
-                        {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
-                    </span>
+                    </div>
                 </div>
 
-                {/* Description */}
-                <p className="text-sm text-gray-300 leading-relaxed">
-                    {skill.description}
-                </p>
+                {/* Keyboard shortcut badge */}
+                {skill.keyboardShortcut && (
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 border border-white/20">
+                        <span className="text-sm font-mono font-bold text-white">
+                            {skill.keyboardShortcut}
+                        </span>
+                    </div>
+                )}
+            </div>
 
-                {/* Decorative gradient overlay */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-            </motion.div>
-        </AnimatePresence>
+            {/* Category badge */}
+            <div className="mb-4">
+                <span
+                    className={cn(
+                        'inline-block px-3 py-1 rounded-full text-xs font-semibold border',
+                        getCategoryColor(skill.category)
+                    )}
+                >
+                    {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
+                </span>
+            </div>
+
+            {/* Description */}
+            <p className="text-sm text-gray-300 leading-relaxed">
+                {skill.description}
+            </p>
+
+            {/* Decorative gradient overlay */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+        </motion.div>
     );
 };
 

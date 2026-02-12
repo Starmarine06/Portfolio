@@ -376,9 +376,18 @@ const AnimatedBackground = () => {
   }, [splineApp, isMobile]);
 
   useEffect(() => {
-    if (!selectedSkill || !splineApp) return;
-    splineApp.setVariable("heading", selectedSkill.label);
-    splineApp.setVariable("desc", selectedSkill.shortDescription);
+    if (!splineApp) return;
+    if (selectedSkill) {
+      splineApp.setVariable("heading", selectedSkill.label);
+      splineApp.setVariable("desc", selectedSkill.shortDescription);
+    } else {
+      try {
+        splineApp.setVariable("heading", "");
+        splineApp.setVariable("desc", "");
+      } catch (e) {
+        // Ignore if variables aren't found
+      }
+    }
   }, [selectedSkill, splineApp]);
 
   // Handle rotation and teardown animations based on active section

@@ -11,6 +11,15 @@ const SkillContext = createContext<SkillContextType | undefined>(undefined);
 export const SkillProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
 
+    React.useEffect(() => {
+        if (selectedSkill) {
+            const timer = setTimeout(() => {
+                setSelectedSkill(null);
+            }, 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [selectedSkill]);
+
     return (
         <SkillContext.Provider value={{ selectedSkill, setSelectedSkill }}>
             {children}

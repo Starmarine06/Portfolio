@@ -7,6 +7,7 @@ import { Skill, SkillCategory, SKILLS } from "@/data/constants";
 import { useSkillKeyboard } from "@/hooks/use-skill-keyboard";
 import { useSkillContext } from "@/contexts/skill-context";
 import { cn } from "@/lib/utils";
+import { AnimatePresence } from "framer-motion";
 
 const categories: { value: SkillCategory | 'all'; label: string }[] = [
   { value: 'all', label: 'All' },
@@ -68,14 +69,19 @@ const SkillsSection = () => {
       </div>
 
       {/* Skill Card Display */}
-      {selectedSkill && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20">
-          <SkillCard
-            skill={selectedSkill}
-            position={{ x: window.innerWidth / 2, y: window.innerHeight / 2 }}
-          />
-        </div>
-      )}
+      <AnimatePresence>
+        {selectedSkill && (
+          <div
+            key={selectedSkill.name}
+            className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+          >
+            <SkillCard
+              skill={selectedSkill}
+              position={{ x: window.innerWidth / 2, y: window.innerHeight / 2 }}
+            />
+          </div>
+        )}
+      </AnimatePresence>
     </SectionWrapper>
   );
 };

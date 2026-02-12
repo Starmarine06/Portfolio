@@ -339,12 +339,11 @@ const projects: Project[] = [
         PROJECT_SKILLS.next,
         PROJECT_SKILLS.tailwind,
         PROJECT_SKILLS.spline,
-        PROJECT_SKILLS.gsap,
         PROJECT_SKILLS.framerMotion,
       ],
       backend: [],
     },
-    live: "https://dev-nambiar.vercel.app",
+    live: "https://devnambiar.vercel.app",
     github: "https://github.com/Starmarine06/Portfolio",
     get content() {
       return (
@@ -370,7 +369,7 @@ const projects: Project[] = [
       frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java],
       backend: [],
     },
-    live: "https://github.com/Starmarine06/Graves",
+    live: "https://www.planetminecraft.com/data-pack/graves-by-starmarine06/",
     github: "https://github.com/Starmarine06/Graves",
     get content() {
       return (
@@ -422,8 +421,8 @@ const projects: Project[] = [
       frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java],
       backend: [],
     },
-    live: "https://github.com/Starmarine06/Craft-",
-    github: "https://github.com/Starmarine06/Craft-",
+    live: "https://github.com/Starmarine06/PrismCraft",
+    github: "https://github.com/Starmarine06/PrismCraft",
     get content() {
       return (
         <div>
