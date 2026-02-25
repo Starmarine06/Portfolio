@@ -458,7 +458,11 @@ const AnimatedBackground = () => {
           setSplineApp(app);
           bypassLoading();
         }}
-        scene="/assets/skills-keyboard.spline"
+        onError={(err: unknown) => {
+          console.warn("Spline scene failed to load:", err);
+          bypassLoading();
+        }}
+        scene="/assets/iphone_new.spline"
       />
     </Suspense>
   );

@@ -66,14 +66,21 @@ function GitHubStarsButton({
   );
 
   useEffect(() => {
+    if (!username || !repo) {
+      setIsLoading(false);
+      return;
+    }
     fetch(`https://api.github.com/repos/${username}/${repo}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) throw new Error(`GitHub API responded with ${response.status}`);
+        return response.json();
+      })
       .then((data) => {
         if (data && typeof data.stargazers_count === 'number') {
           setStars(data.stargazers_count);
         }
       })
-      .catch(console.error)
+      .catch((err) => console.warn('GitHub stars fetch failed:', err))
       .finally(() => setIsLoading(false));
   }, [username, repo]);
 
