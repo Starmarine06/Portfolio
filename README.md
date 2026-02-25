@@ -1,4 +1,4 @@
-# 🚀 Dev Nambiar - ML Engineer Portfolio
+# 🚀 [Dev Nambiar - ML Engineer Portfolio](https://devnambiar.vercel.app/)
 
 Welcome to the repository for my personal portfolio website! This is where I showcase my skills, projects, and a bit of my personality through jaw-dropping 3D animations, slick interactions, and fluid motion.
 
