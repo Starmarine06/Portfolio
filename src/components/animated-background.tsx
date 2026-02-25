@@ -12,33 +12,8 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import { Section, getKeyboardState } from "./animated-background-config";
 import { useSounds } from "./realtime/hooks/use-sounds";
-import { useSkillContext } from "@/contexts/skill-context";
 
 gsap.registerPlugin(ScrollTrigger);
-
-// Map Spline object names to SkillNames enum keys
-const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
-  // Row 1
-  "tensorflow": SkillNames.TENSORFLOW,
-  "unity": SkillNames.UNITY,
-  "html": SkillNames.HTML,
-  "css": SkillNames.CSS,
-  // Row 2
-  "nextjs": SkillNames.NEXTJS,
-  "tailwind": SkillNames.TAILWIND,
-  "nodejs": SkillNames.NODEJS,
-  "express": SkillNames.EXPRESS,
-  // Row 3
-  "git": SkillNames.GIT,
-  "github": SkillNames.GITHUB,
-  "react": SkillNames.REACT,
-  "npm": SkillNames.NPM,
-  // Row 4
-  "linux": SkillNames.LINUX,
-  "firebase": SkillNames.FIREBASE,
-  "mongodb": SkillNames.MONGODB,
-  "aws": SkillNames.AWS
-};
 
 const AnimatedBackground = () => {
   const { isLoading, bypassLoading } = usePreloader();
@@ -50,45 +25,22 @@ const AnimatedBackground = () => {
 
   const { playPressSound, playReleaseSound } = useSounds();
 
-  const { selectedSkill, setSelectedSkill } = useSkillContext();
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
   const [activeSection, setActiveSection] = useState<Section>("hero");
 
+  // Animation controllers refs
+  const bongoAnimationRef = useRef<{ start: () => void; stop: () => void }>();
   const keycapAnimationsRef = useRef<{ start: () => void; stop: () => void }>();
 
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
   const router = useRouter();
-
-  // --- Helpers ---
-
-  const getSkillFromTarget = (targetName: string): Skill | undefined => {
-    // Check direct match
-    if (Object.values(SkillNames).includes(targetName as SkillNames)) {
-      return SKILLS[targetName as SkillNames];
-    }
-    // Check map
-    const mappedName = SPLINE_TO_SKILL_MAP[targetName];
-    if (mappedName) {
-      return SKILLS[mappedName];
-    }
-    return undefined;
-  };
 
   // --- Event Handlers ---
 
   const handleMouseHover = (e: SplineEvent) => {
     if (!splineApp || selectedSkillRef.current?.name === e.target.name) return;
 
-    const target = e.target as any; // Use any to access parent property
-
-    // Ignore platform completely - it blocks the icons
-    if (target.name === "platform") {
-      return;
-    }
-
-    // Log what is being hovered to debug "2 rows" issue
-    console.log("Hovered:", target.name, "Parent:", target.parent?.name);
-
-    if (target.name === "body" || target.name === "iPhone 14 Pro") {
+    if (e.target.name === "body" || e.target.name === "platform") {
       if (selectedSkillRef.current) playReleaseSound();
       setSelectedSkill(null);
       selectedSkillRef.current = null;
@@ -97,28 +49,17 @@ const AnimatedBackground = () => {
         splineApp.setVariable("desc", "");
       }
     } else {
-      let skill = getSkillFromTarget(target.name);
-      // Try parent lookup
-      if (!skill && target.parent) {
-        skill = getSkillFromTarget(target.parent.name);
-      }
-
-      if (skill) {
-        if (!selectedSkillRef.current || selectedSkillRef.current.name !== skill.name) {
-          console.log("Hovered Skill:", skill.name);
+      if (!selectedSkillRef.current || selectedSkillRef.current.name !== e.target.name) {
+        const skill = SKILLS[e.target.name as SkillNames];
+        if (skill) {
           if (selectedSkillRef.current) playReleaseSound();
           playPressSound();
           setSelectedSkill(skill);
           selectedSkillRef.current = skill;
         }
-      } else {
-        // Log when we can't find a matching skill
-        console.log("⚠️ No skill found for:", target.name, "Parent:", target.parent?.name);
       }
     }
   };
-
-
 
   const handleSplineInteractions = () => {
     if (!splineApp) return;
@@ -142,7 +83,7 @@ const AnimatedBackground = () => {
 
     const handleKeyDown = (e: SplineEvent) => {
       if (!splineApp || isInputFocused()) return;
-      const skill = getSkillFromTarget(e.target.name);
+      const skill = SKILLS[e.target.name as SkillNames];
       if (skill) {
         playPressSound();
         setSelectedSkill(skill);
@@ -153,14 +94,7 @@ const AnimatedBackground = () => {
     };
 
     const handleMouseDown = (e: SplineEvent) => {
-      const target = e.target as any; // Use any to access parent property
-      console.log("Clicked Spline Object:", target.name, "Parent:", target.parent?.name);
-      let skill = getSkillFromTarget(target.name);
-      // Try parent lookup
-      if (!skill && target.parent) {
-        skill = getSkillFromTarget(target.parent.name);
-      }
-
+      const skill = SKILLS[e.target.name as SkillNames];
       if (skill && splineApp) {
         playPressSound();
         setSelectedSkill(skill);
@@ -193,10 +127,8 @@ const AnimatedBackground = () => {
     end: string = "bottom bottom"
   ) => {
     if (!splineApp) return;
-    // Try to find the root object. User mentioned iPhone, keeping fallback to keyboard just in case.
-    const rootObj = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard") || splineApp.findObjectByName("Group");
-
-    if (!rootObj) return;
+    const kbd = splineApp.findObjectByName("keyboard");
+    if (!kbd) return;
 
     gsap.timeline({
       scrollTrigger: {
@@ -207,16 +139,16 @@ const AnimatedBackground = () => {
         onEnter: () => {
           setActiveSection(targetSection);
           const state = getKeyboardState({ section: targetSection, isMobile });
-          gsap.to(rootObj.scale, { ...state.scale, duration: 1 });
-          gsap.to(rootObj.position, { ...state.position, duration: 1 });
-          gsap.to(rootObj.rotation, { ...state.rotation, duration: 1 });
+          gsap.to(kbd.scale, { ...state.scale, duration: 1 });
+          gsap.to(kbd.position, { ...state.position, duration: 1 });
+          gsap.to(kbd.rotation, { ...state.rotation, duration: 1 });
         },
         onLeaveBack: () => {
           setActiveSection(prevSection);
           const state = getKeyboardState({ section: prevSection, isMobile, });
-          gsap.to(rootObj.scale, { ...state.scale, duration: 1 });
-          gsap.to(rootObj.position, { ...state.position, duration: 1 });
-          gsap.to(rootObj.rotation, { ...state.rotation, duration: 1 });
+          gsap.to(kbd.scale, { ...state.scale, duration: 1 });
+          gsap.to(kbd.position, { ...state.position, duration: 1 });
+          gsap.to(kbd.rotation, { ...state.rotation, duration: 1 });
         },
       },
     });
@@ -224,46 +156,52 @@ const AnimatedBackground = () => {
 
   const setupScrollAnimations = () => {
     if (!splineApp || !splineContainer.current) return;
-    const rootObj = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard") || splineApp.findObjectByName("Group");
-    if (!rootObj) return;
+    const kbd = splineApp.findObjectByName("keyboard");
+    if (!kbd) return;
 
     // Initial state
     const heroState = getKeyboardState({ section: "hero", isMobile });
-    gsap.set(rootObj.scale, heroState.scale);
-    gsap.set(rootObj.position, heroState.position);
+    gsap.set(kbd.scale, heroState.scale);
+    gsap.set(kbd.position, heroState.position);
 
     // Section transitions
     createSectionTimeline("#skills", "skills", "hero");
     createSectionTimeline("#projects", "projects", "skills", "top 70%");
-    createSectionTimeline("#contact", "contact", "projects", "top 30%", "top top");
+    createSectionTimeline("#contact", "contact", "projects", "top 30%");
   };
 
-  // --- Time Update for iPhone ---
-  useEffect(() => {
-    if (!splineApp) return;
+  const getBongoAnimation = () => {
+    const framesParent = splineApp?.findObjectByName("bongo-cat");
+    const frame1 = splineApp?.findObjectByName("frame-1");
+    const frame2 = splineApp?.findObjectByName("frame-2");
 
-    const updateTime = () => {
-      const textObj = splineApp.findObjectByName("Text");
-      if (textObj) {
-        const now = new Date();
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        const timeString = `${hours}:${minutes}`;
+    if (!frame1 || !frame2 || !framesParent) {
+      return { start: () => { }, stop: () => { } };
+    }
 
-        try {
-          // Attempt to set variable first (requires Variable 'Text' in Spline)
-          splineApp.setVariable("Text", timeString);
-        } catch (e) {
-          // If variable doesn't exist, try setting the text property directly?
-          // This is a long shot for runtime, but worth a try to suppress error.
+    let interval: NodeJS.Timeout;
+    const start = () => {
+      let i = 0;
+      framesParent.visible = true;
+      interval = setInterval(() => {
+        if (i % 2) {
+          frame1.visible = false;
+          frame2.visible = true;
+        } else {
+          frame1.visible = true;
+          frame2.visible = false;
         }
-      }
+        i++;
+      }, 100);
     };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000 * 60); // Update every minute
-    return () => clearInterval(interval);
-  }, [splineApp]);
+    const stop = () => {
+      clearInterval(interval);
+      framesParent.visible = false;
+      frame1.visible = false;
+      frame2.visible = false;
+    };
+    return { start, stop };
+  };
 
   const getKeycapsAnimation = () => {
     if (!splineApp) return { start: () => { }, stop: () => { } };
@@ -273,19 +211,19 @@ const AnimatedBackground = () => {
 
     const start = () => {
       removePrevTweens();
-      Object.keys(SPLINE_TO_SKILL_MAP)
+      Object.values(SKILLS)
         .sort(() => Math.random() - 0.5)
-        .forEach((keyName, idx) => {
-          const keycap = splineApp.findObjectByName(keyName);
+        .forEach((skill, idx) => {
+          const keycap = splineApp.findObjectByName(skill.name);
           if (!keycap) return;
           const t = gsap.to(keycap.position, {
-            y: Math.random() * 20 + 20,
+            y: Math.random() * 200 + 200,
             duration: Math.random() * 2 + 2,
-            delay: idx * 0.1,
+            delay: idx * 0.6,
             repeat: -1,
             yoyo: true,
             yoyoEase: "none",
-            ease: "sine.inOut",
+            ease: "elastic.out(1,0.3)",
           });
           tweens.push(t);
         });
@@ -293,17 +231,19 @@ const AnimatedBackground = () => {
 
     const stop = () => {
       removePrevTweens();
-      Object.keys(SPLINE_TO_SKILL_MAP).forEach((keyName) => {
-        const keycap = splineApp.findObjectByName(keyName);
+
+      Object.values(SKILLS).forEach((skill) => {
+        const keycap = splineApp.findObjectByName(skill.name);
         if (!keycap) return;
         const t = gsap.to(keycap.position, {
           y: 0,
-          duration: 1,
-          ease: "power2.out",
+          duration: 4,
+          repeat: 1,
+          ease: "elastic.out(1,0.7)",
         });
         tweens.push(t);
       });
-      setTimeout(removePrevTweens, 1500);
+      setTimeout(removePrevTweens, 8000);
     };
 
     return { start, stop };
@@ -311,46 +251,18 @@ const AnimatedBackground = () => {
 
   const updateKeyboardTransform = async () => {
     if (!splineApp) return;
-    const rootObj = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard") || splineApp.findObjectByName("Group");
-    if (!rootObj) return;
+    const kbd = splineApp.findObjectByName("keyboard");
+    if (!kbd) return;
 
-    rootObj.visible = false;
+    kbd.visible = false;
     await sleep(400);
-    rootObj.visible = true;
+    kbd.visible = true;
 
     setKeyboardRevealed(true);
 
-    // Enable/Reveal Keys based on Spline object names (4x4 grid)
-    const mapping = [
-      // Row 1
-      "tensorflow", "unity", "html", "css",
-      // Row 2
-      "nextjs", "tailwind", "nodejs", "express",
-      // Row 3
-      "git", "github", "react", "npm",
-      // Row 4
-      "linux", "firebase", "mongodb", "aws"
-    ];
-
-    // Reveal all icons
-    mapping.forEach((keyName, index) => {
-      const obj = splineApp.findObjectByName(keyName);
-      if (obj) {
-        obj.visible = true;
-        console.log(`✅ Found and revealed: ${keyName}`);
-        // Animate appearance
-        gsap.fromTo(obj.scale,
-          { x: 0, y: 0, z: 0 },
-          { x: 1, y: 1, z: 1, duration: 0.5, ease: "back.out(1.7)", delay: index * 0.05 }
-        );
-      } else {
-        console.warn(`⚠️ Could not find object: ${keyName}`);
-      }
-    });
-
     const currentState = getKeyboardState({ section: activeSection, isMobile });
     gsap.fromTo(
-      rootObj.scale,
+      kbd.scale,
       { x: 0.01, y: 0.01, z: 0.01 },
       {
         ...currentState.scale,
@@ -358,6 +270,33 @@ const AnimatedBackground = () => {
         ease: "elastic.out(1, 0.6)",
       }
     );
+
+    const allObjects = splineApp.getAllObjects();
+    const keycaps = allObjects.filter((obj) => obj.name === "keycap");
+
+    await sleep(900);
+
+    if (isMobile) {
+      const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
+      mobileKeyCaps.forEach((keycap) => { keycap.visible = true; });
+    } else {
+      const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
+      desktopKeyCaps.forEach(async (keycap, idx) => {
+        await sleep(idx * 70);
+        keycap.visible = true;
+      });
+    }
+
+    keycaps.forEach(async (keycap, idx) => {
+      keycap.visible = false;
+      await sleep(idx * 70);
+      keycap.visible = true;
+      gsap.fromTo(
+        keycap.position,
+        { y: 200 },
+        { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+      );
+    });
   };
 
   // --- Effects ---
@@ -367,27 +306,54 @@ const AnimatedBackground = () => {
     if (!splineApp) return;
     handleSplineInteractions();
     setupScrollAnimations();
+    bongoAnimationRef.current = getBongoAnimation();
     keycapAnimationsRef.current = getKeycapsAnimation();
-
-    // Cleanup if any animations need stopping
     return () => {
-      keycapAnimationsRef.current?.stop();
-    };
+      bongoAnimationRef.current?.stop()
+      keycapAnimationsRef.current?.stop()
+    }
+
   }, [splineApp, isMobile]);
 
+  // Handle keyboard text visibility based on theme and section
   useEffect(() => {
     if (!splineApp) return;
-    if (selectedSkill) {
-      splineApp.setVariable("heading", selectedSkill.label);
-      splineApp.setVariable("desc", selectedSkill.shortDescription);
+    const textDesktopDark = splineApp.findObjectByName("text-desktop-dark");
+    const textDesktopLight = splineApp.findObjectByName("text-desktop");
+    const textMobileDark = splineApp.findObjectByName("text-mobile-dark");
+    const textMobileLight = splineApp.findObjectByName("text-mobile");
+
+    if (!textDesktopDark || !textDesktopLight || !textMobileDark || !textMobileLight) return;
+
+    const setVisibility = (
+      dDark: boolean,
+      dLight: boolean,
+      mDark: boolean,
+      mLight: boolean
+    ) => {
+      textDesktopDark.visible = dDark;
+      textDesktopLight.visible = dLight;
+      textMobileDark.visible = mDark;
+      textMobileLight.visible = mLight;
+    };
+
+    if (activeSection !== "skills") {
+      setVisibility(false, false, false, false);
+    } else if (theme === "dark") {
+      isMobile
+        ? setVisibility(false, false, false, true)
+        : setVisibility(false, true, false, false);
     } else {
-      try {
-        splineApp.setVariable("heading", "");
-        splineApp.setVariable("desc", "");
-      } catch (e) {
-        // Ignore if variables aren't found
-      }
+      isMobile
+        ? setVisibility(false, false, true, false)
+        : setVisibility(true, false, false, false);
     }
+  }, [theme, splineApp, isMobile, activeSection]);
+
+  useEffect(() => {
+    if (!selectedSkill || !splineApp) return;
+    splineApp.setVariable("heading", selectedSkill.label);
+    splineApp.setVariable("desc", selectedSkill.shortDescription);
   }, [selectedSkill, splineApp]);
 
   // Handle rotation and teardown animations based on active section
@@ -397,24 +363,23 @@ const AnimatedBackground = () => {
     let rotateKeyboard: gsap.core.Tween | undefined;
     let teardownKeyboard: gsap.core.Tween | undefined;
 
-    const rootObj = splineApp.findObjectByName("iPhone 14 Pro") || splineApp.findObjectByName("keyboard") || splineApp.findObjectByName("Group");
+    const kbd = splineApp.findObjectByName("keyboard");
 
-    if (rootObj) {
-      rotateKeyboard = gsap.to(rootObj.rotation, {
-        y: Math.PI * 2 + rootObj.rotation.y,
-        duration: 20, // Slower rotation for phone
+    if (kbd) {
+      rotateKeyboard = gsap.to(kbd.rotation, {
+        y: Math.PI * 2 + kbd.rotation.y,
+        duration: 10,
         repeat: -1,
         yoyo: true,
         yoyoEase: true,
-        ease: "sine.inOut",
+        ease: "back.inOut",
         delay: 2.5,
         paused: true, // Start paused
       });
 
-      // Adjust teardown animation for phone if needed
       teardownKeyboard = gsap.fromTo(
-        rootObj.rotation,
-        { y: 0, x: 0, z: 0 },
+        kbd.rotation,
+        { y: 0, x: -Math.PI, z: 0 },
         {
           y: -Math.PI / 2,
           duration: 5,
@@ -446,13 +411,24 @@ const AnimatedBackground = () => {
         teardownKeyboard?.pause();
       }
 
+      // Handle Bongo Cat
+      if (activeSection === "projects") {
+        await sleep(300);
+        bongoAnimationRef.current?.start();
+      } else {
+        await sleep(200);
+        bongoAnimationRef.current?.stop();
+      }
+
       // Handle Contact Section Animations
       if (activeSection === "contact") {
         await sleep(600);
         teardownKeyboard?.restart();
+        keycapAnimationsRef.current?.start();
       } else {
         await sleep(600);
         teardownKeyboard?.pause();
+        keycapAnimationsRef.current?.stop();
       }
     };
 
@@ -482,7 +458,7 @@ const AnimatedBackground = () => {
           setSplineApp(app);
           bypassLoading();
         }}
-        scene="/assets/iphone_new.spline"
+        scene="/assets/skills-keyboard.spline"
       />
     </Suspense>
   );
