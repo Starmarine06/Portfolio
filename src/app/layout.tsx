@@ -53,6 +53,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={[inter.variable, archivoBlack.variable, "font-display"].join(" ")} suppressHydrationWarning>
       <head>
+        <link rel="preload" as="fetch" href="/assets/iphone_main.spline" crossOrigin="anonymous" />
         <Script
           defer
           src={process.env.UMAMI_DOMAIN}

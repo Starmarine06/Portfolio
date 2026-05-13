@@ -17,10 +17,14 @@ import { cn } from "@/lib/utils";
 import { SectionHeader } from "./section-header";
 
 import SectionWrapper from "../ui/section-wrapper";
+import { useSectionContext } from "@/contexts/section-context";
 
 const ProjectsSection = () => {
+  const { activeSection } = useSectionContext();
+  const isInactive = activeSection !== "projects";
+
   return (
-    <SectionWrapper id="projects" className="max-w-7xl mx-auto md:h-[130vh]">
+    <SectionWrapper id="projects" className={cn("max-w-7xl mx-auto md:h-[130vh]", isInactive && "pointer-inactive")}>
       <SectionHeader id='projects' title="Projects" />
       <div className="grid grid-cols-1 md:grid-cols-3">
         {projects.map((project, index) => (

@@ -34,3 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+speckit.constitution
+speckit.plan
+speckit.specify
+speckit.tasks

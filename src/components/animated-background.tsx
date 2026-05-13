@@ -10,71 +10,79 @@ import { usePreloader } from "./preloader";
 import { useRouter } from "next/navigation";
 import { Section } from "./animated-background-config";
 import { useSkillContext } from "@/contexts/skill-context";
+import { useSectionContext } from "@/contexts/section-context";
 import { useSounds } from "./realtime/hooks/use-sounds";
+import { SplineErrorFallback } from "./spline-error-fallback";
+
+const MAX_RETRY_ATTEMPTS = 1;
+const RETRY_DELAY_MS = 3000;
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Map Spline object names to SkillNames enum keys
 const SPLINE_TO_SKILL_MAP: Record<string, SkillNames> = {
   "tensorflow": SkillNames.TENSORFLOW,
-  "unity": SkillNames.UNITY,
-  "html": SkillNames.HTML,
-  "css": SkillNames.CSS,
-  "nextjs": SkillNames.NEXTJS,
-  "tailwind": SkillNames.TAILWIND,
-  "nodejs": SkillNames.NODEJS,
-  "express": SkillNames.EXPRESS,
-  "git": SkillNames.GIT,
-  "github": SkillNames.GITHUB,
-  "react": SkillNames.REACT,
-  "npm": SkillNames.NPM,
-  "linux": SkillNames.LINUX,
-  "firebase": SkillNames.FIREBASE,
-  "mongodb": SkillNames.MONGODB,
-  "aws": SkillNames.AWS,
+  "unity":      SkillNames.UNITY,
+  "html":       SkillNames.HTML,
+  "css":        SkillNames.CSS,
+  "nextjs":     SkillNames.NEXTJS,
+  "tailwind":   SkillNames.TAILWIND,
+  "nodejs":     SkillNames.NODEJS,
+  "express":    SkillNames.EXPRESS,
+  "git":        SkillNames.GIT,
+  "github":     SkillNames.GITHUB,
+  "react":      SkillNames.REACT,
+  "npm":        SkillNames.NPM,
+  "linux":      SkillNames.LINUX,
+  "firebase":   SkillNames.FIREBASE,
+  "mongodb":    SkillNames.MONGODB,
+  "aws":        SkillNames.AWS,
 };
 
-// Section states: CSS position/scale for wrapper + Spline object rotation
+const BUTTON_TO_SECTION_MAP: Record<string, Section> = {
+  "tab_skills":   "skills",
+  "tab_projects": "projects",
+  "tab_contact":  "contact",
+  "btn_skills":   "skills",
+  "btn_projects": "projects",
+  "btn_contact":  "contact",
+  "Skills":       "skills",
+  "Projects":     "projects",
+  "Contact":      "contact",
+};
+
 type SectionState = {
   desktop: { x: string; y: string; scale: number; rotY: number; rotX: number; rotZ: number };
-  mobile: { x: string; y: string; scale: number; rotY: number; rotX: number; rotZ: number };
+  mobile:  { x: string; y: string; scale: number; rotY: number; rotX: number; rotZ: number };
 };
 
-// Baseline offsets derived from user's manual debug calibration for the Tech Stack (face forward)
 const X = -1.30;
 const Y = -0.68;
 const Z = -1.09;
 
 const SECTION_STATES: Record<Section, SectionState> = {
-  // Hero: Back of the phone (turned 180 deg from face forward)
   hero: {
-    desktop: { x: "15vw", y: "0vh", scale: 0.85, rotY: Y + Math.PI, rotX: X, rotZ: Z },
-    mobile: { x: "0vw", y: "10vh", scale: 1.0, rotY: Y + Math.PI, rotX: X, rotZ: Z },
+    desktop: { x: "12vw", y: "3vh", scale: 2.98, rotY: -0.19, rotX: -1.36, rotZ: 4.99 },
+    mobile:  { x: "0vw",   y: "10vh", scale: 1.0,  rotY: Y + Math.PI / 4, rotX: X, rotZ: Z },
   },
-  // About: turned ~30° right from back of phone
   about: {
-    desktop: { x: "-5vw", y: "-5vh", scale: 1.0, rotY: Y + Math.PI + Math.PI / 6, rotX: X, rotZ: Z },
-    mobile: { x: "0vw", y: "10vh", scale: 0.9, rotY: Y + Math.PI + Math.PI / 6, rotX: X, rotZ: Z },
+    desktop: { x: "-5vw",  y: "-5vh", scale: 1.0,  rotY: Y + Math.PI + Math.PI / 6, rotX: X, rotZ: Z },
+    mobile:  { x: "0vw",   y: "10vh", scale: 0.9,  rotY: Y + Math.PI + Math.PI / 6, rotX: X, rotZ: Z },
   },
-  // Experience: turned ~45° left from back of phone
   experience: {
-    desktop: { x: "-5vw", y: "-5vh", scale: 0.9, rotY: Y + Math.PI - Math.PI / 4, rotX: X + Math.PI / 12, rotZ: Z },
-    mobile: { x: "0vw", y: "10vh", scale: 0.8, rotY: Y + Math.PI - Math.PI / 6, rotX: X + Math.PI / 12, rotZ: Z },
+    desktop: { x: "-5vw",  y: "-5vh", scale: 0.9,  rotY: Y + Math.PI - Math.PI / 4, rotX: X + Math.PI / 12, rotZ: Z },
+    mobile:  { x: "0vw",   y: "10vh", scale: 0.8,  rotY: Y + Math.PI - Math.PI / 6, rotX: X + Math.PI / 12, rotZ: Z },
   },
-  // Skills: Face fully forward (Apps visible), slight tilt up
   skills: {
-    desktop: { x: "0vw", y: "-5vh", scale: 0.9, rotY: Y, rotX: X + Math.PI / 10, rotZ: Z },
-    mobile: { x: "0vw", y: "0vh", scale: 0.8, rotY: Y, rotX: X + Math.PI / 10, rotZ: Z },
+    desktop: { x: "5vw", y: "0vh", scale: 1.98, rotY: -0.19, rotX: -1.36, rotZ: 4.99 },
+    mobile:  { x: "0vw",   y: "0vh",  scale: 0.85, rotY: Y, rotX: X, rotZ: 0.23 + Math.PI * 1.5 },
   },
-  // Projects: showing side edge
   projects: {
-    desktop: { x: "0vw", y: "-5vh", scale: 0.9, rotY: Y + Math.PI / 2, rotX: X, rotZ: Z },
-    mobile: { x: "0vw", y: "10vh", scale: 0.7, rotY: Y + Math.PI / 2, rotX: X, rotZ: Z },
+    desktop: { x: "0vw",   y: "-5vh", scale: 0.85, rotY: Y + Math.PI / 2, rotX: X, rotZ: Z },
+    mobile:  { x: "0vw",   y: "10vh", scale: 0.7,  rotY: Y + Math.PI / 2, rotX: X, rotZ: Z },
   },
-  // Contact: Back of the phone, shifted right
   contact: {
-    desktop: { x: "20vw", y: "-15vh", scale: 0.75, rotY: Y + Math.PI, rotX: X, rotZ: Z },
-    mobile: { x: "0vw", y: "10vh", scale: 0.7, rotY: Y + Math.PI, rotX: X, rotZ: Z },
+    desktop: { x: "22vw", y: "3vh", scale: 1.98, rotY: -0.19, rotX: -1.36, rotZ: 4.99 },
+    mobile:  { x: "0vw",   y: "10vh", scale: 0.85, rotY: Y, rotX: X, rotZ: 0.23 + Math.PI * 1.5 },
   },
 };
 
@@ -83,140 +91,191 @@ const AnimatedBackground = () => {
   const isMobile = useMediaQuery("(max-width: 767px)");
   const wrapperRef = useRef<HTMLDivElement>(null);
   const selectedSkillRef = useRef<Skill | null>(null);
-  const [splineApp, setSplineApp] = useState<Application>();
-  const [activeSection, setActiveSection] = useState<Section>("hero");
+  const idleRotationRef = useRef<gsap.core.Tween | null>(null);
+  const splineAppRef = useRef<Application | undefined>(undefined);
+  const [splineApp, _setSplineApp] = useState<Application | undefined>(undefined);
+  const setSplineApp = useCallback((app: Application | undefined) => {
+    splineAppRef.current = app;
+    _setSplineApp(app);
+  }, []);
+
   const [revealed, setRevealed] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
   const router = useRouter();
+
   const { setSelectedSkill } = useSkillContext();
+  const setSelectedSkillRef = useRef(setSelectedSkill);
+  useEffect(() => { setSelectedSkillRef.current = setSelectedSkill; }, [setSelectedSkill]);
+
+  const { activeSection, setActiveSection, registerNavigate } = useSectionContext();
+  const activeSectionRef = useRef(activeSection);
+  const setActiveSectionRef = useRef(setActiveSection);
+  useEffect(() => { 
+    activeSectionRef.current = activeSection; 
+    setActiveSectionRef.current = setActiveSection; 
+  }, [activeSection, setActiveSection]);
+
   const { playPressSound, playReleaseSound } = useSounds();
+  const playPressSoundRef = useRef(playPressSound);
+  const playReleaseSoundRef = useRef(playReleaseSound);
+  useEffect(() => { playPressSoundRef.current = playPressSound; }, [playPressSound]);
+  useEffect(() => { playReleaseSoundRef.current = playReleaseSound; }, [playReleaseSound]);
 
-  // --- Helpers ---
+  const isMobileRef = useRef(isMobile);
+  useEffect(() => { isMobileRef.current = isMobile; }, [isMobile]);
 
-  const getRootObj = useCallback(() =>
-    splineApp?.findObjectByName("iPhone 14 Pro") ||
-    splineApp?.findObjectByName("keyboard") ||
-    splineApp?.findObjectByName("Group"),
-    [splineApp]);
+  const handleRetry = useCallback(() => {
+    if (retryCount >= MAX_RETRY_ATTEMPTS) return;
+    setError(null);
+    setSplineApp(undefined);
+    setRetryCount(prev => prev + 1);
+  }, [retryCount, setSplineApp]);
 
-  const getState = useCallback((section: Section) =>
-    SECTION_STATES[section][isMobile ? "mobile" : "desktop"],
-    [isMobile]);
+  const getRootObj = useCallback(() => {
+    const app = splineAppRef.current;
+    return app?.findObjectByName("iPhone 14 Pro") || app?.findObjectByName("keyboard") || app?.findObjectByName("Group");
+  }, []);
 
-  const getSkillFromTarget = useCallback((targetName: string): Skill | undefined => {
-    const mappedName = SPLINE_TO_SKILL_MAP[targetName];
-    if (mappedName) return SKILLS[mappedName];
-    if (Object.values(SkillNames).includes(targetName as SkillNames))
-      return SKILLS[targetName as SkillNames];
+  const getState = useCallback((section: Section) => SECTION_STATES[section][isMobileRef.current ? "mobile" : "desktop"], []);
+
+  const getSkillFromTarget = useCallback((name: string): Skill | undefined => {
+    if (!name) return undefined;
+    const clean = name.trim().toLowerCase();
+    const mapped = SPLINE_TO_SKILL_MAP[clean];
+    if (mapped) return SKILLS[mapped];
+    for (const key of Object.keys(SPLINE_TO_SKILL_MAP)) {
+      if (clean.includes(key)) return SKILLS[SPLINE_TO_SKILL_MAP[key]];
+    }
     return undefined;
   }, []);
 
-  // Animate both CSS wrapper (position/scale) AND Spline object rotation
+  const getSectionFromTarget = useCallback((name: string): Section | undefined => BUTTON_TO_SECTION_MAP[name] ?? BUTTON_TO_SECTION_MAP[name.toLowerCase()], []);
+
+  const startIdleRotation = useCallback(() => {
+    const root = getRootObj();
+    if (!root) return;
+    idleRotationRef.current?.kill();
+    const state = SECTION_STATES.hero[isMobileRef.current ? "mobile" : "desktop"];
+    idleRotationRef.current = gsap.to(root.rotation, {
+      y: state.rotY + Math.PI / 12,
+      duration: 3.5,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+    });
+  }, [getRootObj]);
+
+  const stopIdleRotation = useCallback(() => {
+    idleRotationRef.current?.kill();
+    idleRotationRef.current = null;
+  }, []);
+
   const animateTo = useCallback((section: Section, duration = 1.2) => {
+    stopIdleRotation();
     const el = wrapperRef.current;
     const state = getState(section);
-    if (el) {
-      gsap.to(el, { x: state.x, y: state.y, scale: state.scale, duration, ease: "power2.out", overwrite: "auto" });
-    }
+    if (el) gsap.to(el, { x: state.x, y: state.y, opacity: 1, duration, ease: "power2.out", overwrite: "auto" });
     const root = getRootObj();
     if (root) {
-      // Use proxy object and onUpdate to ensure Spline re-renders properly every frame 
-      // when scrolling forward or backward
-      gsap.to(root.rotation, {
-        x: state.rotX,
-        y: state.rotY,
-        z: state.rotZ,
-        duration,
-        ease: "power2.out",
-        overwrite: "auto",
-      });
+      gsap.to(root.rotation, { x: state.rotX, y: state.rotY, z: state.rotZ, duration, ease: "power2.out", overwrite: "auto", onComplete: () => { if (section === "hero") startIdleRotation(); } });
+      gsap.to(root.scale, { x: state.scale, y: state.scale, z: state.scale, duration, ease: "power2.out", overwrite: "auto" });
+      root.position.x = 0; root.position.y = 0;
     }
-  }, [getState, getRootObj]);
+  }, [getState, getRootObj, stopIdleRotation, startIdleRotation]);
 
-  // --- Spline Interaction Handlers ---
+  useEffect(() => {
+    registerNavigate((section: Section) => {
+      setActiveSectionRef.current(section);
+      animateTo(section);
+    });
+  }, [registerNavigate, animateTo]);
 
   const handleMouseHover = useCallback((e: SplineEvent) => {
-    if (!splineApp) return;
+    const app = splineAppRef.current;
+    if (!app) return;
     const target = e.target as any;
-    if (target.name === "platform") return;
-
-    let skill = getSkillFromTarget(target.name);
-    if (!skill && target.parent) skill = getSkillFromTarget(target.parent.name);
-
+    let current = target;
+    let skill: Skill | undefined = undefined;
+    let sec: Section | undefined = undefined;
+    while (current) {
+      const name = current.name ?? "";
+      if (!sec) sec = getSectionFromTarget(name);
+      if (!skill) skill = getSkillFromTarget(name);
+      current = current.parent;
+    }
+    if (sec) return;
     if (skill) {
       if (selectedSkillRef.current?.name !== skill.name) {
-        if (selectedSkillRef.current) playReleaseSound();
-        playPressSound();
-        setSelectedSkill(skill);
-        selectedSkillRef.current = skill;
-        try { splineApp.setVariable("heading", skill.label); splineApp.setVariable("desc", skill.shortDescription); } catch (_) { }
+        if (selectedSkillRef.current) playReleaseSoundRef.current();
+        playPressSoundRef.current();
+        // Show TABS only in skills section
+        if (activeSectionRef.current === "skills" || activeSection === "skills") {
+          setSelectedSkillRef.current(skill);
+          selectedSkillRef.current = skill;
+          try { app.setVariable("heading", skill.label); app.setVariable("desc", skill.shortDescription); } catch (_) { }
+        }
       }
-    } else if (target.name === "body" || target.name === "iPhone 14 Pro") {
-      if (selectedSkillRef.current) playReleaseSound();
-      setSelectedSkill(null);
-      selectedSkillRef.current = null;
-      try { splineApp.setVariable("heading", ""); splineApp.setVariable("desc", ""); } catch (_) { }
     }
-  }, [splineApp, getSkillFromTarget, setSelectedSkill, playPressSound, playReleaseSound]);
+  }, []);
 
   const handleMouseDown = useCallback((e: SplineEvent) => {
-    if (!splineApp) return;
+    const app = splineAppRef.current;
+    if (!app) return;
     const target = e.target as any;
-    let skill = getSkillFromTarget(target.name);
-    if (!skill && target.parent) skill = getSkillFromTarget(target.parent.name);
-    if (skill) {
-      playPressSound();
-      setSelectedSkill(skill);
-      selectedSkillRef.current = skill;
-      try { splineApp.setVariable("heading", skill.label); splineApp.setVariable("desc", skill.shortDescription); } catch (_) { }
+    let current = target;
+    let skill: Skill | undefined = undefined;
+    let sec: Section | undefined = undefined;
+    while (current) {
+      const name = current.name ?? "";
+      if (!sec) sec = getSectionFromTarget(name);
+      if (!skill) skill = getSkillFromTarget(name);
+      current = current.parent;
     }
-  }, [splineApp, getSkillFromTarget, setSelectedSkill, playPressSound]);
+    if (sec) {
+      setActiveSectionRef.current(sec);
+      animateTo(sec);
+      return;
+    }
+    if (skill) {
+      playPressSoundRef.current();
+      // Show TABS only in skills section
+      if (activeSectionRef.current === "skills" || activeSection === "skills") {
+        setSelectedSkillRef.current(skill);
+        selectedSkillRef.current = skill;
+        try { app.setVariable("heading", skill.label); app.setVariable("desc", skill.shortDescription); } catch (_) { }
+      }
+    }
+  }, [animateTo]);
 
-  // Event listeners are wired via onSplineMouseHover / onSplineMouseDown props below
-
-  // --- Time Display ---
   useEffect(() => {
     if (!splineApp) return;
-    const updateTime = () => {
-      const now = new Date();
-      const h = now.getHours().toString().padStart(2, "0");
-      const m = now.getMinutes().toString().padStart(2, "0");
-      const timeString = `${h}:${m}`;
-
-      // Use .text property directly on the object (not setVariable)
-      const textObj = splineApp.findObjectByName("Time") as any;
-      if (textObj) {
-        textObj.text = timeString;
-      }
+    const update = () => {
+      const n = new Date();
+      const obj = splineApp.findObjectByName("Time") as any;
+      if (obj) obj.text = `${n.getHours().toString().padStart(2, "0")}:${n.getMinutes().toString().padStart(2, "0")}`;
     };
-    updateTime();
-    const interval = setInterval(updateTime, 60_000);
-    return () => clearInterval(interval);
+    update();
+    const iv = setInterval(update, 60_000);
+    return () => clearInterval(iv);
   }, [splineApp]);
 
-  // --- Icon Reveal ---
   useEffect(() => {
     if (!splineApp || revealed) return;
-    Object.keys(SPLINE_TO_SKILL_MAP).forEach((keyName, index) => {
-      const obj = splineApp.findObjectByName(keyName);
+    Object.keys(SPLINE_TO_SKILL_MAP).forEach((key, i) => {
+      const obj = splineApp.findObjectByName(key);
       if (obj) {
         obj.visible = true;
-        gsap.fromTo(obj.scale,
-          { x: 0, y: 0, z: 0 },
-          { x: 1, y: 1, z: 1, duration: 0.5, ease: "back.out(1.7)", delay: 0.6 + index * 0.05 }
-        );
+        gsap.fromTo(obj.scale, { x: 0, y: 0, z: 0 }, { x: 1, y: 1, z: 1, duration: 0.5, ease: "back.out(1.7)", delay: 0.6 + i * 0.05 });
       }
     });
   }, [splineApp, revealed]);
 
-  // --- Scroll Animations ---
-  const createTrigger = useCallback((
-    triggerId: string, targetSection: Section, prevSection: Section, start = "top 50%",
-  ) => {
+  const createTrigger = useCallback((id: string, target: Section, prev: Section, start = "top 50%") => {
     ScrollTrigger.create({
-      trigger: triggerId,
-      start,
-      onEnter: () => { setActiveSection(targetSection); animateTo(targetSection); },
-      onLeaveBack: () => { setActiveSection(prevSection); animateTo(prevSection); },
+      trigger: id, start,
+      onEnter: () => { setActiveSectionRef.current(target); animateTo(target); },
+      onLeaveBack: () => { setActiveSectionRef.current(prev); animateTo(prev); },
     });
   }, [animateTo]);
 
@@ -229,32 +288,20 @@ const AnimatedBackground = () => {
       createTrigger("#contact", "contact", "projects", "top 30%");
       ScrollTrigger.refresh();
     });
-  }, [splineApp, isMobile, createTrigger]);
+  }, [splineApp, createTrigger]);
 
-  // --- Hero Idle Rotation ---
-  // Temporarily disabling the infinite idle rotation. 
-  // It conflicts with GSAP scroll triggers causing the phone to not return exactly 
-  // to its origin. Once rotations are dialed in perfectly, we can re-add it using 
-  // a separate wrapper object inside Spline so it doesn't fight the camera state.
-  useEffect(() => { }, []);
-
-  // --- Reveal on first load ---
-  const revealModel = useCallback(async () => {
+  const revealModel = useCallback(() => {
     const el = wrapperRef.current;
     const root = getRootObj();
     if (!el) return;
     setRevealed(true);
     const state = getState("hero");
-    // Wrapper: scale fade-in
-    gsap.fromTo(el,
-      { scale: 0.01, opacity: 0 },
-      { x: state.x, y: state.y, scale: state.scale, opacity: 1, duration: 1.5, ease: "elastic.out(1, 0.6)", delay: 0.4 }
-    );
-    // Spline object: set initial rotation
+    gsap.fromTo(el, { opacity: 0 }, { x: state.x, y: state.y, opacity: 1, duration: 1.5, ease: "power2.out", delay: 0.4, onComplete: () => startIdleRotation() });
     if (root) {
-      gsap.set(root.rotation, { y: state.rotY, x: state.rotX, z: state.rotZ });
+      gsap.set(root.rotation, { x: state.rotX, y: state.rotY, z: state.rotZ });
+      gsap.set(root.scale, { x: state.scale, y: state.scale, z: state.scale });
     }
-  }, [getState, getRootObj]);
+  }, [getState, getRootObj, startIdleRotation]);
 
   useEffect(() => {
     const hash = activeSection === "hero" ? "#" : `#${activeSection}`;
@@ -263,27 +310,22 @@ const AnimatedBackground = () => {
     revealModel();
   }, [splineApp, isLoading, revealed, router, activeSection, revealModel]);
 
+  useEffect(() => {
+    if (!splineApp || !revealed) return;
+    const root = getRootObj();
+    if (root) {
+      const state = getState(activeSection);
+      gsap.to(root.rotation, { x: state.rotX, y: state.rotY, z: state.rotZ, duration: 0.5, overwrite: "auto" });
+    }
+  }, [splineApp, revealed, activeSection, getState, getRootObj]);
+
   return (
-    <div
-      ref={wrapperRef}
-      className="w-full h-full fixed -z-10"
-      style={{ opacity: 0 }}
-    >
+    <div ref={wrapperRef} className="w-full h-full fixed inset-0 z-[30]" style={{ opacity: 0, pointerEvents: "none" }}>
       <Suspense fallback={null}>
-        <Spline
-          className="w-full h-full"
-          scene="/assets/iphone_new.spline"
-          onLoad={(app: Application) => {
-            setSplineApp(app);
-            bypassLoading();
-          }}
-          onError={(err: unknown) => {
-            console.warn("[Spline] Scene failed to load:", err);
-            bypassLoading();
-          }}
-          onSplineMouseHover={handleMouseHover}
-          onSplineMouseDown={handleMouseDown}
-        />
+        {error && retryCount >= MAX_RETRY_ATTEMPTS ? <SplineErrorFallback onRetry={handleRetry} error={error} /> : null}
+        {!error && (
+          <Spline className="w-full h-full" style={{ pointerEvents: "auto" }} scene="/assets/iphone_main.spline" onLoad={(app: Application) => { setSplineApp(app); setError(null); setRetryCount(0); bypassLoading(); try { app.addEventListener("mouseHover", handleMouseHover); app.addEventListener("mouseDown", handleMouseDown); } catch (e) { } }} onError={(err: any) => { const e = err instanceof Error ? err : new Error(String(err)); if (retryCount < MAX_RETRY_ATTEMPTS) { setTimeout(() => setRetryCount(p => p + 1), RETRY_DELAY_MS); } else { setError(e); } bypassLoading(); }} />
+        )}
       </Suspense>
     </div>
   );

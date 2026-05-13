@@ -22,12 +22,15 @@ const SectionWrapper = ({ id, className, children, ...props }: SectionWrapperPro
     <section
       id={id}
       ref={containerRef}
-      className={cn("relative", className)}
+      className={cn("relative pointer-events-none", className)}
       {...props}
     >
       <motion.div
         style={{ opacity, scale }}
-        className="w-full h-full"
+        className="w-full h-full pointer-events-none"
+        // pointer-events:none ensures this framer-motion wrapper never blocks
+        // mouse events from reaching the Spline canvas behind it
+        data-no-pointer
       >
         {children}
       </motion.div>
