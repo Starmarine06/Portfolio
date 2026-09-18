@@ -138,3 +138,46 @@ body {
     scrollbar-width: none;
   }
 }
+
+/* ── Ghost cursor (the circle that "clicks" the Spline skill chips) ──────── */
+.ghost-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.9),
+    0 0 12px 2px rgba(56, 152, 255, 0.85);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.ghost-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  opacity: 0;
+  transform: scale(0.5);
+  pointer-events: none;
+}
+
+.ghost-cursor.is-tapping .ghost-ring {
+  animation: ghost-ripple 0.5s ease-out forwards;
+}
+
+@keyframes ghost-ripple {
+  from {
+    opacity: 0.95;
+    transform: scale(0.55);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.4);
+  }
+}
