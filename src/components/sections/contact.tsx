@@ -19,11 +19,11 @@ const ContactSection = () => {
   const isInactive = activeSection !== "contact";
 
   return (
-    <SectionWrapper id="contact" className={cn("h-auto py-20 max-w-7xl mx-auto", isInactive && "pointer-inactive")}>
+    <SectionWrapper id="contact" className={cn("h-auto pt-6 pb-20 md:py-20 max-w-7xl mx-auto px-4", isInactive && "pointer-inactive")}>
       {/* Title pushed down a bit with extra top padding so it clears the model nicely */}
       <SectionHeader
         id="contact"
-        className="relative mb-4 pt-8"
+        className="pt-4 md:pt-8"
         title={
           <>
             LET&apos;S WORK <br />
@@ -32,9 +32,9 @@ const ContactSection = () => {
         }
       />
       {/* Two-column grid: form left, empty right (model floats in the right half) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 mx-4 mt-8 md:mt-16 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 mt-4 md:mt-16 gap-8">
         {/* Contact form card — shifted slightly down to vertically align with the phone */}
-        <Card className="min-w-7xl bg-white/70 dark:bg-black/70 backdrop-blur-sm rounded-xl md:mt-10 self-center">
+        <Card className="w-full bg-white/70 dark:bg-black/70 backdrop-blur-sm rounded-xl md:mt-10 self-center">
           <CardHeader>
             <CardTitle className="text-4xl">Contact Form</CardTitle>
             <CardDescription>

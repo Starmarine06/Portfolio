@@ -21,8 +21,11 @@ const MatrixBackground = () => {
     const characters = isDark
       ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}[]<>@"
       : "01";
-    const fontSize = 16;
-    const columns = Math.floor(width / fontSize);
+
+    // On small screens use a coarser, cheaper grid to save battery/GPU
+    const isMobile = width <= 768;
+    const fontSize = isMobile ? 24 : 16;
+    const columns = Math.min(Math.floor(width / fontSize), isMobile ? 32 : 200);
 
     const drops: number[] = [];
     for (let i = 0; i < columns; i++) {

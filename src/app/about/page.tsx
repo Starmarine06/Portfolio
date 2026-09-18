@@ -180,7 +180,7 @@ function Page() {
                 </div>
               </div>
             </div>
-            <div className="hidden lg:block">
+            <div>
               <hr className="my-10 border-zinc-600" />
               <ul className="flex flex-col gap-3">
                 {CONTACT_LINKS.map((link) => (
@@ -203,7 +203,7 @@ function Page() {
             </div>
           </div>
         </aside>
-        <main className="basis-3/4 w-[500px]">
+        <main className="w-full lg:flex-1 lg:min-w-0 basis-3/4">
           <div
             className="p-10 border-[.5px] rounded-md border-zinc-600"
             style={{ backdropFilter: "blur(2px)" }}
@@ -236,12 +236,17 @@ function Page() {
                     perPage: 5,
                     perMove: 1,
                     rewind: true,
+                    gap: "1rem",
                     easing: "cubic-bezier(0.25, 1, 0.5, 1)",
                     arrows: false,
+                    breakpoints: {
+                      1024: { perPage: 3 },
+                      640: { perPage: 2 },
+                    },
                   }}
                   aria-label="My Favorite Images"
                 >
-                  {TOOLS.reverse().map((tool) => (
+                  {[...TOOLS].reverse().map((tool) => (
                     <SplideSlide key={tool.name}>
                       <div
                         key={tool.name}

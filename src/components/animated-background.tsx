@@ -104,9 +104,12 @@ const AnimatedBackground = () => {
   const [retryCount, setRetryCount] = useState(0);
   const router = useRouter();
 
-  const { setSelectedSkill } = useSkillContext();
+  const { selectedSkill, setSelectedSkill } = useSkillContext();
   const setSelectedSkillRef = useRef(setSelectedSkill);
   useEffect(() => { setSelectedSkillRef.current = setSelectedSkill; }, [setSelectedSkill]);
+  // Name of the last 3D object that opened the skill panel — used to reverse
+  // its hover state when the panel is dismissed.
+  const lastTappedNameRef = useRef<string | null>(null);
 
   const { activeSection, setActiveSection, registerNavigate } = useSectionContext();
   const activeSectionRef = useRef(activeSection);
@@ -198,10 +201,14 @@ const AnimatedBackground = () => {
     let current = target;
     let skill: Skill | undefined = undefined;
     let sec: Section | undefined = undefined;
+    let skillObjName: string | null = null;
     while (current) {
       const name = current.name ?? "";
       if (!sec) sec = getSectionFromTarget(name);
-      if (!skill) skill = getSkillFromTarget(name);
+      if (!skill) {
+        const found = getSkillFromTarget(name);
+        if (found) { skill = found; skillObjName = name; }
+      }
       current = current.parent;
     }
     if (sec) return;
@@ -213,7 +220,8 @@ const AnimatedBackground = () => {
         if (activeSectionRef.current === "skills" || activeSection === "skills") {
           setSelectedSkillRef.current(skill);
           selectedSkillRef.current = skill;
-          try { app.setVariable("heading", skill.label); app.setVariable("desc", skill.shortDescription); } catch (_) { }
+          if (skillObjName) lastTappedNameRef.current = skillObjName;
+          try { app.setVariable("heading", skill.label); } catch (_) { }
         }
       }
     }
@@ -226,10 +234,14 @@ const AnimatedBackground = () => {
     let current = target;
     let skill: Skill | undefined = undefined;
     let sec: Section | undefined = undefined;
+    let skillObjName: string | null = null;
     while (current) {
       const name = current.name ?? "";
       if (!sec) sec = getSectionFromTarget(name);
-      if (!skill) skill = getSkillFromTarget(name);
+      if (!skill) {
+        const found = getSkillFromTarget(name);
+        if (found) { skill = found; skillObjName = name; }
+      }
       current = current.parent;
     }
     if (sec) {
@@ -243,10 +255,28 @@ const AnimatedBackground = () => {
       if (activeSectionRef.current === "skills" || activeSection === "skills") {
         setSelectedSkillRef.current(skill);
         selectedSkillRef.current = skill;
-        try { app.setVariable("heading", skill.label); app.setVariable("desc", skill.shortDescription); } catch (_) { }
+        if (skillObjName) lastTappedNameRef.current = skillObjName;
+        try { app.setVariable("heading", skill.label); } catch (_) { }
       }
     }
   }, [animateTo]);
+
+  // When the skill panel is dismissed, clear the phone heading and reverse the
+  // 3D object's hover state so it returns to the base pose. On touch there is
+  // no hover-out event, so the Spline "Details" state would otherwise stick.
+  useEffect(() => {
+    const app = splineAppRef.current;
+    if (!app) return;
+    if (selectedSkill) {
+      try { app.setVariable("heading", selectedSkill.label); } catch (_) { }
+      return;
+    }
+    try { app.setVariable("heading", ""); } catch (_) { }
+    const name = lastTappedNameRef.current;
+    if (name) {
+      try { app.emitEventReverse("mouseHover", name); } catch (_) { }
+    }
+  }, [selectedSkill, splineApp]);
 
   useEffect(() => {
     if (!splineApp) return;

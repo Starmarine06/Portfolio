@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { opacity } from "../header/anim";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export const FloatingDock = ({
   items,
@@ -99,10 +100,11 @@ const FloatingDockDesktop = ({
 }) => {
   let mouseX = useMotionValue(Infinity);
   const [showHint, setShowHint] = useState(true);
+  const isTouch = useMediaQuery("(hover: none)");
   const timer = useRef<NodeJS.Timeout>();
   const controls = useAnimation();
   useEffect(() => {
-    if (showHint) {
+    if (showHint && !isTouch) {
       controls.start({
         opacity: [0, 1, 1, 0],
         x: [-50, -50, 50, 50],
@@ -122,9 +124,9 @@ const FloatingDockDesktop = ({
       controls.stop();
       clearInterval(timer.current);
     };
-  }, [showHint]);
+  }, [showHint, isTouch]);
   return (
-    <div className="relative h-fit flex items-center justify-center pointer-events-auto">
+    <div className="relative h-fit flex items-center justify-center pointer-events-auto max-w-full">
       <motion.div
         onMouseMove={(e) => {
           mouseX.set(e.pageX);
@@ -133,8 +135,9 @@ const FloatingDockDesktop = ({
         onMouseLeave={() => mouseX.set(Infinity)}
         className={cn(
           // "hidden md:flex",
-          "flex gap-2 md:gap-4",
-          "mx-auto h-16 items-end  rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
+          "flex flex-nowrap gap-2 md:gap-4",
+          "mx-auto h-16 items-end rounded-2xl bg-gray-50 dark:bg-neutral-900 px-4 pb-3",
+          "max-w-full overflow-x-auto no-scrollbar",
           // "blur-sm brightness-50",
           className
         )}
@@ -143,7 +146,7 @@ const FloatingDockDesktop = ({
           <IconContainer mouseX={mouseX} key={item.title} {...item} />
         ))}
       </motion.div>
-      {showHint && (
+      {showHint && !isTouch && (
         <div
           className="z-10 absolute t-0 w-full h-full pointer-events-none"
           onMouseEnter={() => setShowHint(false)}
@@ -226,7 +229,7 @@ function IconContainer({
       style={{ width, height }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="aspect-square rounded-full bg-gray-200 dark:bg-neutral-800 flex items-center justify-center relative"
+      className="aspect-square shrink-0 rounded-full bg-gray-200 dark:bg-neutral-800 flex items-center justify-center relative"
     >
       <AnimatePresence>
         {hovered && (

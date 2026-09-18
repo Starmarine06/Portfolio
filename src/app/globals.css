@@ -6,6 +6,19 @@ body {
   scroll-behavior: smooth;
 }
 
+/* Prevent any horizontal scroll/overflow on small screens */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100vw;
+}
+
+/* Prevent iOS/Android long-press callouts (used by the touch radial menu) */
+* {
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -102,6 +115,12 @@ body {
     pointer-events: auto;
     position: relative;
     z-index: 80;
+  }
+
+  /* Skill panel is fixed-positioned — only re-enable pointer events, do not
+     override its position/z-index. */
+  .canvas-overlay-mode [data-skill-panel] {
+    pointer-events: auto;
   }
 
   /* Completely suppress pointer events on interactive elements within inactive sections */

@@ -26,10 +26,10 @@ const ProjectsSection = () => {
   return (
     <SectionWrapper
       id="projects"
-      className={cn("max-w-7xl mx-auto py-12 md:py-20", isInactive && "pointer-inactive")}
+      className={cn("max-w-7xl mx-auto py-12 md:py-20 px-4 sm:px-6", isInactive && "pointer-inactive")}
     >
       <SectionHeader id="projects" title="Featured Projects" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8 mt-6">
         {projects.map((project) => (
           <Modal key={project.id}>
             <ProjectCard project={project} />
@@ -45,7 +45,7 @@ const ProjectCard = ({ project }: { project: Project }) => {
     <div className="flex items-center justify-center w-full">
       <ModalTrigger className="bg-transparent p-0 flex justify-center group/modal-btn w-full rounded-2xl cursor-pointer">
         <div
-          className="relative w-full rounded-2xl overflow-hidden bg-neutral-900 border border-neutral-800/80 hover:border-neutral-600 transition-all duration-500 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/10 group text-left"
+          className="relative w-full max-w-[300px] mx-auto sm:max-w-none rounded-2xl overflow-hidden bg-neutral-900 border border-neutral-800/80 hover:border-neutral-600 transition-all duration-500 shadow-lg hover:shadow-2xl hover:shadow-cyan-500/10 group text-left"
           style={{ aspectRatio: "16/10" }}
         >
           <Image
@@ -64,8 +64,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
             </span>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-            <h3 className="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors duration-300 mb-1">
+          <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5 z-10">
+            <h3 className="text-lg sm:text-xl font-bold text-white group-hover:text-cyan-300 transition-colors duration-300 mb-1">
               {project.title}
             </h3>
             <p className="text-xs text-neutral-400 line-clamp-2">

@@ -39,65 +39,111 @@ export const SectionTabs: React.FC = () => {
   );
 
   return (
-    <nav
-      id="section-tabs"
-      aria-label="Section navigation"
-      className={cn(
-        "fixed right-4 md:right-6 top-1/2 -translate-y-1/2",
-        "z-[80]",
-        "flex flex-col gap-3",
-      )}
-    >
-      {TABS.map(({ section, label, icon }) => {
-        const isActive = activeSection === section;
-        return (
-          <button
-            key={section}
-            id={`tab-btn-${section}`}
-            onClick={() => handleTabClick(section)}
-            aria-label={`Navigate to ${label}`}
-            aria-current={isActive ? "page" : undefined}
-            className={cn(
-              "group relative flex items-center justify-end overflow-hidden",
-              "rounded-full border transition-all duration-300 ease-out",
-              "cursor-pointer select-none",
-              "h-3 w-3",
-              "hover:h-9 hover:w-28",
-              isActive && "h-9 w-28",
-              // Adaptive Colours: border and background change based on theme
-              isActive
-                ? "border-foreground/50 bg-foreground/10 shadow-lg shadow-black/5 dark:shadow-white/5"
-                : "border-foreground/20 bg-foreground/5 hover:border-foreground/40 hover:bg-foreground/10",
-            )}
-          >
-            {/* Icon — adaptive color */}
-            <span
+    <>
+      {/* Desktop: vertical rail on the right edge */}
+      <nav
+        id="section-tabs-desktop"
+        aria-label="Section navigation"
+        className={cn(
+          "hidden md:flex fixed right-4 md:right-6 top-1/2 -translate-y-1/2",
+          "z-[80]",
+          "flex-col gap-3",
+        )}
+      >
+        {TABS.map(({ section, label, icon }) => {
+          const isActive = activeSection === section;
+          return (
+            <button
+              key={section}
+              id={`tab-btn-${section}`}
+              onClick={() => handleTabClick(section)}
+              aria-label={`Navigate to ${label}`}
+              aria-current={isActive ? "page" : undefined}
               className={cn(
-                "absolute left-0 flex-shrink-0 flex items-center justify-center",
-                "w-9 h-9 text-sm text-foreground",
-                "opacity-0 transition-opacity duration-200",
-                "group-hover:opacity-100",
-                isActive && "opacity-100",
+                "group relative flex items-center justify-end overflow-hidden",
+                "rounded-full border transition-all duration-300 ease-out",
+                "cursor-pointer select-none",
+                "h-3 w-3",
+                "hover:h-9 hover:w-28",
+                isActive && "h-9 w-28",
+                // Adaptive Colours: border and background change based on theme
+                isActive
+                  ? "border-foreground/50 bg-foreground/10 shadow-lg shadow-black/5 dark:shadow-white/5"
+                  : "border-foreground/20 bg-foreground/5 hover:border-foreground/40 hover:bg-foreground/10",
               )}
             >
-              {icon}
-            </span>
+              {/* Icon — adaptive color */}
+              <span
+                className={cn(
+                  "absolute left-0 flex-shrink-0 flex items-center justify-center",
+                  "w-9 h-9 text-sm text-foreground",
+                  "opacity-0 transition-opacity duration-200",
+                  "group-hover:opacity-100",
+                  isActive && "opacity-100",
+                )}
+              >
+                {icon}
+              </span>
 
-            {/* Label — adaptive color */}
-            <span
-              className={cn(
-                "pr-3 text-xs font-medium whitespace-nowrap text-foreground",
-                "opacity-0 transition-opacity duration-200 delay-75",
-                "group-hover:opacity-100",
-                isActive && "opacity-100",
-              )}
-            >
-              {label}
-            </span>
-          </button>
-        );
-      })}
-    </nav>
+              {/* Label — adaptive color */}
+              <span
+                className={cn(
+                  "pr-3 text-xs font-medium whitespace-nowrap text-foreground",
+                  "opacity-0 transition-opacity duration-200 delay-75",
+                  "group-hover:opacity-100",
+                  isActive && "opacity-100",
+                )}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Mobile: fixed bottom navigation bar */}
+      <nav
+        id="section-tabs-mobile"
+        aria-label="Section navigation"
+        className={cn(
+          "md:hidden fixed bottom-0 inset-x-0 z-[80]",
+          "border-t border-foreground/10 bg-background/80 backdrop-blur-md",
+          "pb-[env(safe-area-inset-bottom)]",
+        )}
+      >
+        <div className="mx-auto flex max-w-md items-stretch justify-around">
+          {TABS.map(({ section, label, icon }) => {
+            const isActive = activeSection === section;
+            return (
+              <button
+                key={section}
+                id={`tab-btn-${section}`}
+                onClick={() => handleTabClick(section)}
+                aria-label={`Navigate to ${label}`}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "relative flex flex-1 flex-col items-center justify-center gap-0.5",
+                  "min-h-[56px] px-2 py-2",
+                  "cursor-pointer select-none",
+                  "transition-colors duration-300",
+                  isActive
+                    ? "text-foreground"
+                    : "text-foreground/40 hover:text-foreground/70",
+                )}
+              >
+                <span className="text-lg leading-none">{icon}</span>
+                <span className="text-[10px] font-medium leading-tight">
+                  {label}
+                </span>
+                {isActive && (
+                  <span className="absolute top-0 h-0.5 w-8 rounded-full bg-foreground/60" />
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </nav>
+    </>
   );
 };
 

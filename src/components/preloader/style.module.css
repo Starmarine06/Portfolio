@@ -30,3 +30,15 @@
   position: absolute;
   z-index: 1;
 }
+
+@media (max-width: 768px) {
+  .introduction {
+    padding-inline: 24px;
+    padding-bottom: 30px;
+  }
+
+  .introduction p {
+    font-size: clamp(28px, 11vw, 44px);
+    flex-wrap: wrap;
+  }
+}

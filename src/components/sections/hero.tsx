@@ -40,7 +40,7 @@ const HeroSection = () => {
                   <p
                     className={cn(
                       "md:self-start mt-4 font-thin text-md text-slate-500 dark:text-zinc-400",
-                      "cursor-default font-display sm:text-xl md:text-xl whitespace-nowrap bg-clip-text "
+                      "cursor-default font-display text-sm sm:text-xl md:text-xl bg-clip-text "
                     )}
                   >
                     Hi, I am
@@ -54,7 +54,7 @@ const HeroSection = () => {
                       <h1
                         className={cn(
                           "-ml-[6px] leading-none font-normal text-slate-900 dark:text-white text-left",
-                          "text-7xl md:text-7xl lg:text-8xl xl:text-9xl",
+                          "text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl",
                           "cursor-default font-display"
                         )}
                       >
@@ -76,7 +76,7 @@ const HeroSection = () => {
                   <p
                     className={cn(
                       "md:self-start md:mt-4 font-thin text-md text-slate-500 dark:text-zinc-400",
-                      "cursor-default font-display sm:text-xl md:text-xl whitespace-nowrap bg-clip-text "
+                      "cursor-default font-display text-sm sm:text-xl md:text-xl bg-clip-text "
                     )}
                   >
                     A Machine Learning Engineer
@@ -141,7 +141,7 @@ const HeroSection = () => {
         </div>
         <div className="grid col-span-1"></div>
       </div>
-      <div className="absolute bottom-10 left-[50%] translate-x-[-50%]">
+      <div className="absolute bottom-20 md:bottom-10 left-[50%] translate-x-[-50%]">
         <ScrollDownIcon />
       </div>
     </SectionWrapper>
