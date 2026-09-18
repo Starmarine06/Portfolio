@@ -27,36 +27,39 @@ import {
   SiTypescript,
   SiVuedotjs,
   SiUnity,
-  SiCsharp,
+  SiTelegram,
+  SiNvidia,
 } from "react-icons/si";
-import { FaJava } from "react-icons/fa";
+import { FaJava, FaRobot, FaWindows } from "react-icons/fa";
 import { TbBrandFramerMotion } from "react-icons/tb";
 const BASE_PATH = "/assets/projects-screenshots";
 
 const ProjectsLinks = ({ live, repo }: { live: string; repo?: string }) => {
   return (
-    <div className="flex flex-col md:flex-row items-center justify-start gap-3 my-3 mb-8">
-      <Link
-        className="font-mono underline flex gap-2"
-        rel="noopener"
-        target="_new"
-        href={live}
-      >
-        <Button variant={"default"} size={"sm"}>
-          Visit Website
-          <ArrowUpRight className="ml-3 w-5 h-5" />
-        </Button>
-      </Link>
+    <div className="flex flex-wrap items-center justify-start gap-3 my-4 mb-6">
+      {live && (
+        <Link
+          className="no-underline inline-flex"
+          rel="noopener noreferrer"
+          target="_blank"
+          href={live}
+        >
+          <Button variant={"default"} size={"sm"} className="gap-2 font-medium">
+            Visit Project
+            <ArrowUpRight className="w-4 h-4" />
+          </Button>
+        </Link>
+      )}
       {repo && (
         <Link
-          className="font-mono underline flex gap-2"
-          rel="noopener"
-          target="_new"
+          className="no-underline inline-flex"
+          rel="noopener noreferrer"
+          target="_blank"
           href={repo}
         >
-          <Button variant={"default"} size={"sm"}>
-            Github
-            <ArrowUpRight className="ml-3 w-5 h-5" />
+          <Button variant={"outline"} size={"sm"} className="gap-2 font-medium">
+            GitHub Repo
+            <ArrowUpRight className="w-4 h-4" />
           </Button>
         </Link>
       )}
@@ -95,6 +98,30 @@ const PROJECT_SKILLS = {
     fg: "white",
     icon: <SiPython />,
   },
+  nvidia: {
+    title: "NVIDIA AI",
+    bg: "black",
+    fg: "white",
+    icon: <SiNvidia />,
+  },
+  telegram: {
+    title: "Telegram Bot API",
+    bg: "black",
+    fg: "white",
+    icon: <SiTelegram />,
+  },
+  windows: {
+    title: "Windows Automation",
+    bg: "black",
+    fg: "white",
+    icon: <FaWindows />,
+  },
+  ai: {
+    title: "LLM Agent",
+    bg: "black",
+    fg: "white",
+    icon: <FaRobot />,
+  },
   prisma: {
     title: "prisma",
     bg: "black",
@@ -126,7 +153,7 @@ const PROJECT_SKILLS = {
     icon: <SiReactquery />,
   },
   shadcn: {
-    title: "ShanCN UI",
+    title: "Shadcn UI",
     bg: "black",
     fg: "white",
     icon: <SiShadcnui />,
@@ -229,7 +256,7 @@ const PROJECT_SKILLS = {
     title: "C#",
     bg: "black",
     fg: "white",
-    icon: <SiCsharp />,
+    icon: <FaJava />,
   },
   unity: {
     title: "Unity",
@@ -343,7 +370,7 @@ const projects: Project[] = [
       ],
       backend: [],
     },
-    live: "https://devnambiar.vercel.app",
+    live: "https://devnambiar.in",
     github: "https://github.com/Starmarine06/Portfolio",
     get content() {
       return (
@@ -386,27 +413,54 @@ const projects: Project[] = [
     },
   },
   {
-    id: "flood-management",
-    category: "Web / Utility",
-    title: "Flood Management System",
-    src: "/assets/projects-screenshots/flood-management/landing.png",
+    id: "ai-assistant",
+    category: "AI/ML",
+    title: "AI Assistant",
+    src: "/assets/projects-screenshots/ai-assistant/landing.png",
     screenshots: ["landing.png"],
     skills: {
-      frontend: [PROJECT_SKILLS.react, PROJECT_SKILLS.js, PROJECT_SKILLS.tailwind],
-      backend: [PROJECT_SKILLS.node, PROJECT_SKILLS.mongo],
+      frontend: [
+        PROJECT_SKILLS.ai,
+        PROJECT_SKILLS.telegram,
+        PROJECT_SKILLS.windows,
+      ],
+      backend: [
+        PROJECT_SKILLS.python,
+        PROJECT_SKILLS.nvidia,
+      ],
     },
-    live: "https://github.com/Starmarine06/Flood-Management-App",
-    github: "https://github.com/Starmarine06/Flood-Management-App",
+    live: "https://github.com/Starmarine06/AIAssistant",
+    github: "https://github.com/Starmarine06/AIAssistant",
     get content() {
       return (
-        <div>
-          <TypographyP className="font-mono text-2xl text-center">
-            Real-time Flood Disaster Management
+        <div className="space-y-4">
+          <TypographyP className="text-xl font-semibold text-center text-foreground/90">
+            Windows-based Autonomous Personal AI Assistant
           </TypographyP>
-          <TypographyP className="font-mono">
-            A comprehensive system for tracking flood levels, reporting disasters, and coordinating rescue efforts. Designed to provide real-time updates and critical information during flood events.
+          <TypographyP className="text-muted-foreground leading-relaxed">
+            AI Assistant is a desktop automation and intelligent assistant system powered by NVIDIA-hosted LLMs and the Telegram Bot API. It seamlessly bridges mobile control with desktop automation, giving you complete remote mastery over your Windows workstation.
           </TypographyP>
           <ProjectsLinks live={this.live} repo={this.github} />
+          
+          <TypographyH3 className="my-3 mt-6 text-lg font-bold">Key Capabilities</TypographyH3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <strong className="block text-foreground mb-1">🖥️ PC Automation & Control</strong>
+              <span className="text-muted-foreground">Run terminal commands, launch applications/websites, manage clipboard, and lock/unlock Windows workstation.</span>
+            </div>
+            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <strong className="block text-foreground mb-1">🎯 Vision & Coordinate Grid</strong>
+              <span className="text-muted-foreground">Grid screenshot overlay (A1-J10) and coordinate-based mouse clicking and typing simulation.</span>
+            </div>
+            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <strong className="block text-foreground mb-1">📅 Smart Scheduler & Calendar</strong>
+              <span className="text-muted-foreground">Google Calendar synchronization, background interval tasks, custom timers, and WhatsApp messaging via local address book.</span>
+            </div>
+            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
+              <strong className="block text-foreground mb-1">⚡ Dynamic Skills & Tray GUI</strong>
+              <span className="text-muted-foreground">Dynamically register custom Python modules, system tray controls, macro recorder, and configuration GUI.</span>
+            </div>
+          </div>
         </div>
       );
     },
@@ -421,7 +475,7 @@ const projects: Project[] = [
       frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java],
       backend: [],
     },
-    live: "https://github.com/Starmarine06/PrismCraft",
+    live: "https://www.curseforge.com/minecraft/mc-mods/prismcraft-dyeable-blocks",
     github: "https://github.com/Starmarine06/PrismCraft",
     get content() {
       return (

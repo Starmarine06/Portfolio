@@ -1,5 +1,5 @@
 "use client";
-import styles from "./style.module.scss";
+import styles from "./style.module.css";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { opacity, slideUp } from "./anim";
@@ -29,12 +29,13 @@ export default function Index() {
 
   useEffect(() => {
     if (index == steps.length - 1) return;
-    setTimeout(
+    const timer = setTimeout(
       () => {
-        setIndex(index + 1);
+        setIndex((prev) => prev + 1);
       },
-      index == 0 ? 1000 : 150
+      60
     );
+    return () => clearTimeout(timer);
   }, [index]);
 
   const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${

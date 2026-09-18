@@ -33,3 +33,7 @@ export const useSectionContext = () => {
   if (!ctx) throw new Error("useSectionContext must be used within SectionProvider");
   return ctx;
 };
+
+export const useOptionalSectionContext = () => {
+  return useContext(SectionContext);
+};

@@ -88,10 +88,24 @@ const MatrixBackground = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    const interval = setInterval(draw, 33);
+
+    let animationFrameId: number;
+    let lastTime = 0;
+    const fpsInterval = 1000 / 30; // 30 FPS throttle to save battery and GPU cycles
+
+    const renderLoop = (time: number) => {
+      animationFrameId = requestAnimationFrame(renderLoop);
+      const elapsed = time - lastTime;
+      if (elapsed > fpsInterval) {
+        lastTime = time - (elapsed % fpsInterval);
+        draw();
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(renderLoop);
 
     return () => {
-      clearInterval(interval);
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
     };
   }, [resolvedTheme]);

@@ -1,0 +1,32 @@
+﻿.introduction {
+  height: 100dvh;
+  width: 100dvw;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding-inline: 60px;
+  padding-bottom: 30px;
+  position: fixed;
+  z-index: 99;
+  background-color: hsl(var(--background));
+}
+
+.introduction svg {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: calc(100% + 300px);
+}
+
+.introduction svg path {
+  fill: hsl(var(--background));
+}
+
+.introduction p {
+  display: flex;
+  color: hsl(var(--foreground));
+  font-size: 72px;
+  align-items: center;
+  position: absolute;
+  z-index: 1;
+}

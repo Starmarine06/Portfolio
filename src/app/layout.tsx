@@ -14,6 +14,13 @@ export const metadata: Metadata = {
   description: config.description.long,
   keywords: config.keywords,
   authors: [{ name: config.author }],
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: config.title,
     description: config.description.short,
@@ -53,6 +60,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={[inter.variable, archivoBlack.variable, "font-display"].join(" ")} suppressHydrationWarning>
       <head>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
         <link rel="preload" as="fetch" href="/assets/iphone_main.spline" crossOrigin="anonymous" />
         <Script
           defer

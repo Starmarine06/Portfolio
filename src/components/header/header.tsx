@@ -1,7 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import styles from "./style.module.scss";
+import styles from "./style.module.css";
 import { cn } from "@/lib/utils";
 import FunnyThemeToggle from "../theme/funny-theme-toggle";
 import { Button } from "../ui/button";
@@ -30,7 +30,7 @@ const Header = ({ loader }: HeaderProps) => {
         y: 0,
       }}
       transition={{
-        delay: loader ? 3.5 : 0,
+        delay: loader ? 0.5 : 0,
         duration: 0.8,
       }}
     >
@@ -42,7 +42,7 @@ const Header = ({ loader }: HeaderProps) => {
         </Link>
 
         <div className="flex items-center gap-4">
-          <FunnyThemeToggle className="w-6 h-6 hidden md:flex" />
+          <FunnyThemeToggle />
           {process.env.NEXT_PUBLIC_WS_URL && <OnlineUsers />}
 
         </div>

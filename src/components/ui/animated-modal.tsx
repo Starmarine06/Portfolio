@@ -9,6 +9,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import { ScrollArea } from "./scroll-area";
 
 interface ModalContextType {
@@ -68,84 +69,117 @@ export const ModalBody = ({
   children: ReactNode;
   className?: string;
 }) => {
-  const { open } = useModal();
+  const { open, setOpen } = useModal();
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") setOpen(false);
-      });
-    }
-  }, []);
-  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
     if (open) {
+      document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "hidden";
+      document.body.setAttribute("data-lenis-prevent", "true");
+      document.documentElement.setAttribute("data-lenis-prevent", "true");
     }
-  }, [open]);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "auto";
+      document.body.removeAttribute("data-lenis-prevent");
+      document.documentElement.removeAttribute("data-lenis-prevent");
+    };
+  }, [open, setOpen]);
 
-  const modalRef = useRef(null);
-  const { setOpen } = useModal();
-  useOutsideClick(modalRef, () => setOpen(false));
+  useEffect(() => {
+    const listener = (event: MouseEvent | TouchEvent) => {
+      if (
+        !modalRef.current ||
+        modalRef.current.contains(event.target as Node) ||
+        (event.target as HTMLElement).closest(".no-click-outside")
+      ) {
+        return;
+      }
+      setOpen(false);
+    };
 
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          initial={{
-            opacity: 0,
-          }}
-          animate={{
-            opacity: 1,
-            backdropFilter: "blur(10px)",
-          }}
-          exit={{
-            opacity: 0,
-            backdropFilter: "blur(0px)",
-          }}
-          className="modall fixed [perspective:800px] [transform-style:preserve-3d] inset-0 h-full w-full  flex items-center justify-center z-50"
+    if (open) {
+      document.addEventListener("mousedown", listener);
+      document.addEventListener("touchstart", listener);
+    }
+    return () => {
+      document.removeEventListener("mousedown", listener);
+      document.removeEventListener("touchstart", listener);
+    };
+  }, [open, setOpen]);
+
+  if (!open) return null;
+
+  const modalContent = (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
+      exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 md:p-6 [perspective:1000px] [transform-style:preserve-3d]"
+      data-lenis-prevent="true"
+      onWheel={(e) => e.stopPropagation()}
+    >
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 bg-black/80 z-[9999] backdrop-blur-md"
+        onClick={() => setOpen(false)}
+        data-lenis-prevent="true"
+      ></motion.div>
+
+      <motion.div
+        ref={modalRef}
+        className={cn(
+          "relative z-[10000] w-full max-w-4xl max-h-[88vh] bg-background/95 dark:bg-neutral-950/95 backdrop-blur-xl border border-border/80 dark:border-neutral-800/80 rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden",
+          className
+        )}
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ type: "spring", stiffness: 350, damping: 25 }}
+        data-lenis-prevent="true"
+      >
+        <button
+          onClick={() => setOpen(false)}
+          className="absolute top-4 right-4 z-[10002] p-2 rounded-full bg-neutral-200/80 dark:bg-neutral-800/80 text-foreground/80 hover:text-foreground hover:bg-neutral-300 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+          aria-label="Close"
         >
-          <Overlay />
-
-          <motion.div
-            ref={modalRef}
-            className={cn(
-              "min-h-[50%] max-h-[90%] md:max-w-[40%] bg-white dark:bg-neutral-950 border border-transparent dark:border-neutral-800 md:rounded-2xl relative z-50 flex flex-col flex-1 overflow-hidden",
-              className
-            )}
-            initial={{
-              opacity: 0,
-              scale: 0.5,
-              rotateX: 40,
-              y: 40,
-            }}
-            animate={{
-              opacity: 1,
-              scale: 1,
-              rotateX: 0,
-              y: 0,
-            }}
-            exit={{
-              opacity: 0,
-              scale: 0.8,
-              rotateX: 10,
-            }}
-            transition={{
-              type: "spring",
-              stiffness: 260,
-              damping: 15,
-            }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            <CloseIcon />
-            <ScrollArea className="h-[80dvh] w-full rounded-md border">
-              {children}
-            </ScrollArea>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            <path d="M18 6l-12 12" />
+            <path d="M6 6l12 12" />
+          </svg>
+        </button>
+
+        <div
+          className="flex-1 w-full overflow-y-auto overscroll-contain no-scrollbar"
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
+        >
+          {children}
+        </div>
+      </motion.div>
+    </motion.div>
   );
+
+  if (typeof window === "undefined") return null;
+  return createPortal(modalContent, document.body);
 };
 
 export const ModalContent = ({
@@ -156,7 +190,7 @@ export const ModalContent = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-col flex-1 p-3 md:p-10", className)}>
+    <div className={cn("flex flex-col flex-1 p-6 md:p-10", className)}>
       {children}
     </div>
   );
@@ -172,7 +206,7 @@ export const ModalFooter = ({
   return (
     <div
       className={cn(
-        "flex justify-end p-4 bg-gray-100 dark:bg-neutral-900",
+        "flex justify-end gap-3 p-6 border-t border-neutral-200 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/50",
         className
       )}
     >
@@ -181,70 +215,16 @@ export const ModalFooter = ({
   );
 };
 
-const Overlay = ({ className }: { className?: string }) => {
-  const { setOpen } = useModal();
-  return (
-    <motion.div
-      initial={{
-        opacity: 0,
-      }}
-      animate={{
-        opacity: 1,
-        backdropFilter: "blur(10px)",
-      }}
-      exit={{
-        opacity: 0,
-        backdropFilter: "blur(0px)",
-      }}
-      className={`modal-overlay fixed inset-0 h-full w-full bg-black bg-opacity-50 z-50 ${className}`}
-      onClick={() => setOpen(false)}
-    ></motion.div>
-  );
-};
-
-const CloseIcon = () => {
-  const { setOpen } = useModal();
-  return (
-    <button
-      onClick={() => setOpen(false)}
-      className="absolute top-4 right-4 group z-[9999]"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="36"
-        height="36"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="text-black dark:text-white h-4 w-4 group-hover:scale-125 group-hover:rotate-3 transition duration-200"
-      >
-        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-        <path d="M18 6l-12 12" />
-        <path d="M6 6l12 12" />
-      </svg>
-    </button>
-  );
-};
-
-// Hook to detect clicks outside of a component.
-// Add it in a separate file, I've added here for simplicity
 export const useOutsideClick = (
   ref: React.RefObject<HTMLDivElement>,
   callback: Function
 ) => {
   useEffect(() => {
-    const listener = (
-      event: any
-      //  React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
-    ) => {
-      // DO NOTHING if the element being clicked is the target element or their children
+    const listener = (event: MouseEvent | TouchEvent) => {
       if (
         !ref.current ||
-        ref.current.contains(event.target) ||
-        !event.target.classList.contains("no-click-outside")
+        ref.current.contains(event.target as Node) ||
+        (event.target as HTMLElement).closest(".no-click-outside")
       ) {
         return;
       }

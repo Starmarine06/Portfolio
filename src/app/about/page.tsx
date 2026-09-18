@@ -37,7 +37,7 @@ import {
   SiUnity,
   SiUnrealengine,
   SiPostman,
-  SiPowerbi,
+  SiPowers,
   SiPython,
   SiVite,
 } from "react-icons/si";
@@ -115,7 +115,7 @@ const TOOLS = [
   {
     name: "Power BI",
     content: "Business analytics service",
-    icon: <SiPowerbi size={"50px"} color="#F2C811" />,
+    icon: <SiPowers size={"50px"} color="#F2C811" />,
     color: "#F2C811",
   },
   {

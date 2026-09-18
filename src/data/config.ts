@@ -22,7 +22,7 @@ const config = {
   ],
   author: "Dev Nambiar",
   email: "devnambiar06@gmail.com",
-  site: "https://devnambiar.site",
+  site: "https://devnambiar.in",
 
   // for github stars button
   githubUsername: "Starmarine06",

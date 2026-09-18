@@ -8,12 +8,12 @@ import { config } from "@/data/config";
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t border-border px-4 py-6 sm:flex-row md:px-6 sm:justify-between pointer-events-none relative z-[80]">
+    <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t border-border px-4 py-6 sm:flex-row md:px-6 sm:justify-between pointer-events-auto relative z-[90]">
       <p className="text-xs text-gray-500 dark:text-gray-400">
         © {year} {config.author}. All rights reserved.
       </p>
       <SocialMediaButtons />
-      <nav className="flex gap-4 sm:gap-6 z-10">
+      <nav className="flex gap-4 sm:gap-6 z-10 pointer-events-auto">
         {footer.map((link, index) => {
           const { title, href } = link;
 

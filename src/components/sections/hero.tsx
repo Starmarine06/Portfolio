@@ -11,7 +11,7 @@ import {
 import { usePreloader } from "../preloader";
 import { BlurIn, BoxReveal } from "../reveal-animations";
 import ScrollDownIcon from "../scroll-down-icon";
-import { SiGithub, SiLinkedin, SiX } from "react-icons/si";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { config } from "@/data/config";
 
 import SectionWrapper from "../ui/section-wrapper";
@@ -53,13 +53,13 @@ const HeroSection = () => {
                     <TooltipTrigger asChild>
                       <h1
                         className={cn(
-                          "-ml-[6px] leading-none font-thin text-transparent text-slate-800 text-left",
-                          "font-thin text-7xl md:text-7xl lg:text-8xl xl:text-9xl",
-                          "cursor-default text-edge-outline font-display "
+                          "-ml-[6px] leading-none font-normal text-slate-900 dark:text-white text-left",
+                          "text-7xl md:text-7xl lg:text-8xl xl:text-9xl",
+                          "cursor-default font-display"
                         )}
                       >
                         {config.author.split(" ")[0]}
-                        <br className="md:block hiidden" />
+                        <br className="md:block hidden" />
                         {config.author.split(" ")[1]}
                       </h1>
                     </TooltipTrigger>
@@ -121,7 +121,7 @@ const HeroSection = () => {
                       className="cursor-can-hover"
                     >
                       <Button variant={"outline"}>
-                        <SiGithub size={24} />
+                        <FaGithub size={24} />
                       </Button>
                     </Link>
                     <Link
@@ -130,7 +130,7 @@ const HeroSection = () => {
                       className="cursor-can-hover"
                     >
                       <Button variant={"outline"}>
-                        <SiLinkedin size={24} />
+                        <FaLinkedin size={24} />
                       </Button>
                     </Link>
                   </div>
