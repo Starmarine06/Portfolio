@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chamber Draw - A Shedding-Race Card Game</title>
+<meta name="description" content="Chamber Draw is a 2-7 player shedding-race card game you host yourself. Fast color-and-number races, chamber bombs, diffuses, extra lives — offline vs AI or online with friends via Epic Online Services.">
+<style>
+  :root {
+    --bg: #07090f;
+    --panel: #0d1322;
+    --panel2: #121a2c;
+    --border: #1d2940;
+    --gold: #ffd45e;
+    --red: #e02929;
+    --muted: #9fb0d0;
+    --text: #e8ecf5;
+    --link: #6fb6ff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    line-height: 1.65;
+  }
+  a { color: var(--link); }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  header.top {
+    background: linear-gradient(180deg, #0d1322 0%, #07090f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 26px 20px 20px;
+  }
+  .brand {
+    max-width: 900px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .brand .logo {
+    width: 46px; height: 46px; border-radius: 11px;
+    background: linear-gradient(135deg, var(--gold) 0%, #d99a1f 100%);
+    display: grid; place-items: center;
+    font-weight: 900; font-size: 21px; color: #0d1322;
+  }
+  .brand h1 { font-size: 21px; letter-spacing: 0.02em; }
+  .brand .tag { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .hero {
+    position: relative;
+    margin: 30px 0 10px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.5);
+    background: var(--panel);
+  }
+  .hero video { display: block; width: 100%; aspect-ratio: 16/9; border: 0; }
+
+  .lead {
+    font-size: 18px;
+    max-width: 760px;
+    margin: 26px auto 0;
+    text-align: center;
+    color: var(--text);
+  }
+  .lead b { color: var(--gold); }
+
+  .cta {
+    display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;
+    margin: 26px 0 8px;
+  }
+  .cta a {
+    text-decoration: none;
+    font-weight: 700; font-size: 15px;
+    padding: 12px 22px;
+    border-radius: 10px;
+    transition: 0.2s;
+  }
+  .cta .primary {
+    background: linear-gradient(135deg, var(--gold) 0%, #d99a1f 100%);
+    color: #0d1322;
+  }
+  .cta .primary:hover { filter: brightness(1.08); }
+  .cta .ghost {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .cta .ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  h2 {
+    font-size: 23px;
+    margin: 52px 0 14px;
+    padding-left: 12px;
+    border-left: 4px solid var(--gold);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin: 18px 0 10px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .card h3 { font-size: 16px; color: var(--gold); margin-bottom: 8px; }
+  .card p { font-size: 14px; color: var(--muted); }
+  .card ul { margin: 10px 0 0 18px; font-size: 14px; color: var(--muted); }
+  .card li { margin: 5px 0; }
+
+  ol.steps { margin: 18px 0 10px 22px; }
+  ol.steps li { margin: 12px 0; }
+
+  .box {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 18px 0;
+  }
+
+  .links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+    margin-top: 18px;
+  }
+  .links a {
+    display: block;
+    text-decoration: none;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    transition: 0.2s;
+  }
+  .links a:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .links .t { font-weight: 700; color: var(--text); font-size: 16px; }
+  .links .d { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 70px;
+    padding-top: 22px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer .links { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 8px; grid-template-columns: none; }
+  footer .links a { display: inline; background: none; border: none; padding: 0; }
+  footer .links a:hover { transform: none; border: none; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">CD</div>
+    <div>
+      <h1>Chamber Draw</h1>
+      <div class="tag">A 2-7 player shedding-race card game you host yourself</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <video src="chamber-draw-promo-2026.mp4" title="Chamber Draw promotional video" controls preload="metadata" playsinline></video>
+  </section>
+
+  <p class="lead">
+    Match cards by color or number, stack forced draws, steer the <b>chamber</b>,
+    and be the first to shed your whole hand. Play offline against AI, or host a
+    peer-to-peer match online with friends through <b>Epic Online Services</b>.
+  </p>
+
+  <div class="cta">
+    <a class="primary" href="#how">How to play</a>
+    <a class="ghost" href="#features">Features</a>
+    <a class="ghost" href="epic_games_account.html">Epic Games account &amp; online</a>
+  </div>
+
+  <h2 id="features">What makes Chamber Draw</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Shedding race</h3>
+      <p>Numbers and colors match like a fast, less predictable Uno-style race. First to empty their hand wins the round — then the table rotates.</p>
+    </div>
+    <div class="card">
+      <h3>Cards with teeth</h3>
+      <ul>
+        <li>Skip / Reverse / Draw Two / Draw Four / Draw Ten</li>
+        <li>Chamber bombs — defuse with a Diffuse card or lose a life</li>
+        <li>Extra Life, swap hands, peek the deck, rotate decks, jump in</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Forced-draw stacking</h3>
+      <p>Stack any Draw card onto a pending forced draw — even across colors — to keep the pile growing until someone finally draws.</p>
+    </div>
+    <div class="card">
+      <h3>Host it yourself</h3>
+      <p>Lobbies are peer-to-peer and host-authoritative through Epic Online Services. No dedicated servers, no accounts beyond your free Epic account for online play.</p>
+    </div>
+  </div>
+
+  <h2 id="how">How to play</h2>
+  <ol class="steps">
+    <li><b>Set up a table.</b> 2-7 players, seat colors, host vs AI or friends online.</li>
+    <li><b>Match and shed.</b> Play a card matching the active color or number, or an action card like Skip or Draw Two.</li>
+    <li><b>Wield the chamber.</b> A bomb slips into the deck. Draw it and you must diffuse it or take a hit — claim extra lives to survive.</li>
+    <li><b>Stack the pressure.</b> When someone is forced to draw, throw on any Draw card to increase the count.</li>
+    <li><b>Win the race.</b> Shed your final card to take the round. Keep playing while bombs remain across the table.</li>
+  </ol>
+
+  <div class="box">
+    <b>Want the specifics?</b>
+    Full rules, online behavior, and player rights live on the dedicated pages below. The promo video is also available in
+    <a href="promo_video.html">a dedicated full-screen page</a> and a
+    <a href="chamber-draw-promo-portrait-2026.mp4">portrait version</a> for mobile / vertical embeds.
+  </div>
+
+  <h2 id="links">Explore</h2>
+  <div class="links">
+    <a href="promo_video.html">
+      <div class="t">Watch the promo</div>
+      <div class="d">Full-screen promotional video with music.</div>
+    </a>
+    <a href="epic_games_account.html">
+      <div class="t">Epic Games account &amp; online</div>
+      <div class="d">How Epic Online Services powers lobbies, friends, and P2P play.</div>
+    </a>
+    <a href="privacy_policy.html">
+      <div class="t">Privacy policy</div>
+      <div class="d">What we collect, how it's used, and your rights.</div>
+    </a>
+  </div>
+
+  <footer>
+    <strong>Chamber Draw</strong> - A shedding-race card game.
+    <div class="links">
+      <a href="privacy_policy.html">Privacy</a>
+      <a href="epic_games_account.html">Epic Games account</a>
+      <a href="promo_video.html">Promo video</a>
+    </div>
+  </footer>
+
+</main>
+</body>
+</html>

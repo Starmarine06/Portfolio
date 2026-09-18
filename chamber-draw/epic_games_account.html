@@ -1,0 +1,300 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Epic Games Account — Chamber Draw</title>
+<meta name="description" content="How Chamber Draw uses your Epic Games account and Epic Online Services for online multiplayer.">
+<style>
+  :root {
+    --bg: #07090f;
+    --panel: #0d1322;
+    --panel2: #121a2c;
+    --border: #1d2940;
+    --text: #e8ecf5;
+    --muted: #9fb0d0;
+    --gold: #ffd45e;
+    --red: #e02929;
+    --link: #6fb6ff;
+    --green: #26ae4d;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    line-height: 1.65;
+  }
+  a { color: var(--link); }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  header.top {
+    background: linear-gradient(180deg, #0d1322 0%, #07090f 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 26px 20px 20px;
+  }
+  .brand {
+    max-width: 900px; margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .brand .logo {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--gold) 0%, #d99a1f 100%);
+    display: grid; place-items: center;
+    font-weight: 900; font-size: 20px; color: #0d1322;
+  }
+  .brand h1 { font-size: 20px; letter-spacing: 0.02em; }
+  .brand .tag { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  .promo {
+    margin: 34px 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.5);
+    background: var(--panel);
+  }
+  .promo video { display: block; width: 100%; aspect-ratio: 16/9; border: 0; border-radius: 14px;}
+
+  h2 { font-size: 24px; margin: 48px 0 14px; padding-left: 12px; border-left: 4px solid var(--gold); }
+  h3 { font-size: 17px; margin: 26px 0 8px; color: var(--gold); }
+  p { margin: 12px 0; }
+  .muted { color: var(--muted); }
+
+  .box {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 16px 0;
+  }
+  .box ul { margin: 10px 0 0 20px; }
+  .box li { margin: 8px 0; }
+
+  .flow {
+    display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0;
+  }
+  .flow .step {
+    flex: 1 1 200px;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    position: relative;
+  }
+  .flow .step .n {
+    display: inline-grid; place-items: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: #0d1322; font-weight: 900; font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .flow .step b { display: block; margin-bottom: 4px; }
+  .flow .step p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+  .note {
+    background: rgba(255,212,94,0.07);
+    border: 1px solid rgba(255,212,94,0.35);
+    border-left-width: 4px;
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 18px 0;
+    font-size: 14px;
+  }
+  .note.green {
+    background: rgba(38,174,77,0.07);
+    border-color: rgba(38,174,77,0.4);
+  }
+  .note.green b { color: var(--green); }
+  .note b { color: var(--gold); }
+
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 11px 12px; border: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--panel2); color: var(--gold); font-weight: 700; }
+
+  .faq details {
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 10px 0;
+    padding: 4px 16px;
+  }
+  .faq summary {
+    cursor: pointer;
+    font-weight: 700;
+    padding: 10px 0;
+    color: var(--text);
+    list-style: none;
+  }
+  .faq summary::before { content: "▸ "; color: var(--gold); }
+  .faq details[open] summary::before { content: "▾ "; }
+  .faq p { font-size: 14px; color: var(--muted); padding-bottom: 12px; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+    padding-top: 22px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  footer .links { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">CD</div>
+    <div>
+      <h1>Chamber Draw</h1>
+      <div class="tag">Online multiplayer powered by Epic Online Services</div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="promo">
+    <video src="chamber-draw-promo-2026.mp4" title="Chamber Draw promotional video" controls preload="metadata" playsinline></video>
+  </section>
+
+  <p>
+    Chamber Draw uses <strong>Epic Online Services (EOS)</strong> for all online multiplayer.
+    An <strong>Epic Games account</strong> lets you play against friends, appear in the same lobby,
+    and use Epic's peer-to-peer network so matches run smoothly.
+  </p>
+
+  <div class="note">
+    <b>No Epic account required offline.</b> Playing against AI is 100% local — no login, no internet,
+    no data leaving your device.
+  </div>
+
+  <h2 id="why">Why an Epic Games account?</h2>
+  <p>
+    Instead of building our own accounts and servers, Chamber Draw plugs into Epic Online Services —
+    the same free infrastructure Epic runs at massive scale. That gives you:
+  </p>
+  <div class="box">
+    <ul>
+      <li>A trusted, single login you may already have from other Epic games.</li>
+      <li>Friends &amp; lobby features through your existing Epic friends list.</li>
+      <li>Host-authoritative, low-latency P2P matches with reliable relay fallback.</li>
+      <li>Cross-play identity — the same account works across platforms that support EOS.</li>
+    </ul>
+  </div>
+
+  <h2 id="how">How sign-in works</h2>
+  <div class="flow">
+    <div class="step">
+      <span class="n">1</span><b>Launch</b>
+      <p>The game starts the EOS SDK and prepares authentication.</p>
+    </div>
+    <div class="step">
+      <span class="n">2</span><b>Sign in</b>
+      <p>You're authenticated with your Epic account (persistent auth remembers you; account-portal opens a browser on first run).</p>
+    </div>
+    <div class="step">
+      <span class="n">3</span><b>Create / Join</b>
+      <p>Host a lobby or join a friend's lobby using your Epic friends list.</p>
+    </div>
+    <div class="step">
+      <span class="n">4</span><b>Play</b>
+      <p>Epic relays host-authoritative match state over P2P between seats.</p>
+    </div>
+  </div>
+
+  <div class="note green">
+    <b>Test / anonymous mode:</b> development builds may support anonymous sign-in for testing.
+    Every public build requires a real Epic account for online play.
+  </div>
+
+  <h2 id="what">What Epic sees</h2>
+  <p>
+    When you play online, Epic Online Services processes some data on its infrastructure.
+    The table below summarizes what is involved:
+  </p>
+  <table>
+    <tr>
+      <th>Data</th>
+      <th>Who sees it</th>
+      <th>Why</th>
+    </tr>
+    <tr>
+      <td>Epic Account ID / display name</td>
+      <td>Epic, the host, and other players in your lobby</td>
+      <td>Identity, lobby roster, friends</td>
+    </tr>
+    <tr>
+      <td>Lobby &amp; session metadata</td>
+      <td>Epic, lobby members</td>
+      <td>Matchmaking and connection setup</td>
+    </tr>
+    <tr>
+      <td>Friends list references</td>
+      <td>Epic (via the EOS friends interface)</td>
+      <td>Showing who's online / joinable</td>
+    </tr>
+    <tr>
+      <td>Match state (turns, cards, bombs, winners)</td>
+      <td>Host + players in that match only</td>
+      <td>Running the actual game — not stored by us</td>
+    </tr>
+  </table>
+  <p class="muted">
+    We (the developer) do not operate analytics on your Epic data, do not sell it, and do not store it on our own servers.
+  </p>
+
+  <h2 id="manage">Managing your account</h2>
+  <div class="box">
+    <ul>
+      <li><strong>Settings &amp; privacy:</strong> <a href="https://www.epicgames.com/account" rel="noopener">Epic Games Account Portal</a></li>
+      <li><strong>Delete your Epic account:</strong> handled entirely by Epic — <a href="https://www.epicgames.com/account/delete-account" rel="noopener">request it here</a>.</li>
+      <li><strong>Sign out:</strong> remove the auth token the game stores in <code>User://</code> (or simply uninstall).</li>
+      <li><strong>Policy:</strong> <a href="privacy_policy.html">Chamber Draw's Privacy Policy</a> covers our side; Epic's <a href="https://www.epicgames.com/site/en-US/privacypolicy" rel="noopener">Privacy Policy</a> covers theirs.</li>
+    </ul>
+  </div>
+
+  <h2 id="faq">FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Can I play online without an Epic account?</summary>
+      <p>No. Online multiplayer requires a free Epic Games account, because EOS uses it for identity, friends, lobbies, and connectivity. Offline vs-AI always works without one.</p>
+    </details>
+    <details>
+      <summary>Is my data shared with advertisers?</summary>
+      <p>No. Chamber Draw has no advertising, no analytics SDKs, and no data brokers. The game never sells personal information.</p>
+    </details>
+    <details>
+      <summary>Does the game run its own servers?</summary>
+      <p>No. Multiplayer uses Epic Online Services infrastructure (lobbies, P2P, relay). The "server authority" for each match is simply the host player's machine, and it exists only for the duration of the game.</p>
+    </details>
+    <details>
+      <summary>I'm under 18 — can I play online?</summary>
+      <p>You need an Epic account that permits online play. Epic Games handles age gating and parental consent for minors through its own account system, which Chamber Draw relies on.</p>
+    </details>
+    <details>
+      <summary>How do I stop Chamber Draw using Epic services?</summary>
+      <p>Switch to offline mode (playing vs AI) — nothing is contacted. To fully sign out, delete the app's local config data or uninstall the game.</p>
+    </details>
+  </div>
+
+  <h2 id="contact">Contact</h2>
+  <div class="box">
+    <p>Questions about Epic Online Services in Chamber Draw? Email <a href="mailto:flamekizer@outlook.com">flamekizer@outlook.com</a>.</p>
+    <p class="muted">Official Epic documentation: <a href="https://dev.epicgames.com/docs" rel="noopener">Epic Online Services Developer Docs</a></p>
+  </div>
+
+  <footer>
+    <strong>Chamber Draw</strong> — online multiplayer via Epic Online Services.
+    <div class="links">
+      <a href="privacy_policy.html">Privacy Policy</a>
+      <a href="epic_games_account.html">Epic Games Account</a>
+      <a href="promo_video.html">Watch the Trailer</a>
+    </div>
+  </footer>
+
+</main>
+</body>
+</html>
