@@ -21,6 +21,9 @@ const MatrixBackground = () => {
     const characters = isDark
       ? "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}[]<>@"
       : "01";
+    // Light mode: instead of random 0/1 digits, each column spells a word
+    // vertically (one letter below the other as it falls).
+    const lightWords = ["ERROR", "BLINDING", "FLASHED"];
 
     // On small screens use a coarser, cheaper grid to save battery/GPU
     const isMobile = width <= 768;
@@ -28,8 +31,10 @@ const MatrixBackground = () => {
     const columns = Math.min(Math.floor(width / fontSize), isMobile ? 32 : 200);
 
     const drops: number[] = [];
+    const wordIdx: number[] = [];
     for (let i = 0; i < columns; i++) {
       drops[i] = Math.random() * -100;
+      if (!isDark) wordIdx[i] = Math.floor(Math.random() * lightWords.length);
     }
 
     const draw = () => {
@@ -42,9 +47,15 @@ const MatrixBackground = () => {
       ctx.font = "bold " + fontSize + "px monospace";
 
       for (let i = 0; i < drops.length; i++) {
-        const text = characters.charAt(
-          Math.floor(Math.random() * characters.length)
-        );
+        let text: string;
+        if (isDark) {
+          text = characters.charAt(
+            Math.floor(Math.random() * characters.length)
+          );
+        } else {
+          const word = lightWords[wordIdx[i]];
+          text = word.charAt(Math.max(0, Math.floor(drops[i])) % word.length);
+        }
 
         // Colors based on theme
         if (isDark) {
@@ -73,6 +84,7 @@ const MatrixBackground = () => {
 
         if (drops[i] * fontSize > height && Math.random() > 0.975) {
           drops[i] = 0;
+          if (!isDark) wordIdx[i] = Math.floor(Math.random() * lightWords.length);
         }
 
         drops[i] += 1.2;
@@ -86,6 +98,7 @@ const MatrixBackground = () => {
       if (newColumns > drops.length) {
         for (let i = drops.length; i < newColumns; i++) {
           drops[i] = Math.random() * -100;
+          if (!isDark) wordIdx[i] = Math.floor(Math.random() * lightWords.length);
         }
       }
     };
