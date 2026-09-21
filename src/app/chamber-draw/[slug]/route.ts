@@ -9,6 +9,7 @@ const SOURCE_DIR = path.join(process.cwd(), "chamber-draw");
 const HTML_PAGES: Record<string, string> = {
   main: "main.html",
   privacy: "privacy_policy.html",
+  terms: "terms.html",
   "epic-games-account": "epic_games_account.html",
   "promo-video": "promo_video.html",
 };
@@ -16,6 +17,7 @@ const HTML_PAGES: Record<string, string> = {
 const LINK_REWRITES: Record<string, string> = {
   "main.html": "/chamber-draw/main",
   "privacy_policy.html": "/chamber-draw/privacy",
+  "terms.html": "/chamber-draw/terms",
   "epic_games_account.html": "/chamber-draw/epic-games-account",
   "promo_video.html": "/chamber-draw/promo-video",
 };
