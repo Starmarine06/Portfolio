@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chamber Draw - A Shedding-Race Card Game</title>
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="description" content="Chamber Draw is a 2-7 player shedding-race card game you host yourself. Fast color-and-number races, chamber bombs, diffuses, extra lives — offline vs AI or online with friends via Epic Online Services.">
 <style>
   :root {
@@ -87,6 +91,17 @@
     color: var(--text);
   }
   .cta .ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .cta a.install {
+    display: inline-flex; align-items: center; gap: 9px;
+  }
+  .cta a.install svg { width: 18px; height: 18px; display: block; }
+  .cta-note {
+    text-align: center;
+    font-size: 13px;
+    color: var(--muted);
+    margin: 12px 0 0;
+  }
+  .cta-note a { color: var(--muted); }
 
   h2 {
     font-size: 23px;
@@ -179,6 +194,21 @@
     peer-to-peer match online with friends through <b>Epic Online Services</b>.
   </p>
 
+  <div class="cta">
+    <a class="primary install" href="https://starmarine06.itch.io/chamber-draw" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 3v12"></path>
+        <path d="m7 10.5 5 5 5-5"></path>
+        <path d="M4 20.5h16"></path>
+      </svg>
+      Download the game
+    </a>
+    <a class="ghost" href="#how">How to play</a>
+    <a class="ghost" href="#features">Features</a>
+    <a class="ghost" href="epic_games_account.html">Epic Games account &amp; online</a>
+  </div>
+  <p class="cta-note">Free on itch.io &middot; Windows &amp; Linux &middot; name your own price</p>
+
   <div class="box">
     <b>Online play uses Epic Online Services (app name: Chamber Draw).</b>
     Playing online requires a free Epic Games account and uses your Epic display name,
@@ -186,12 +216,6 @@
     peer-to-peer sessions. The
     <a href="epic_games_account.html">Epic Games account &amp; online</a> page explains exactly
     what's shared and how to manage your account.
-  </div>
-
-  <div class="cta">
-    <a class="primary" href="#how">How to play</a>
-    <a class="ghost" href="#features">Features</a>
-    <a class="ghost" href="epic_games_account.html">Epic Games account &amp; online</a>
   </div>
 
   <h2 id="features">What makes Chamber Draw</h2>
@@ -236,6 +260,10 @@
 
   <h2 id="links">Explore</h2>
   <div class="links">
+    <a href="https://starmarine06.itch.io/chamber-draw" rel="noopener">
+      <div class="t">Download the game</div>
+      <div class="d">Free on itch.io. Windows and Linux builds, name your own price.</div>
+    </a>
     <a href="promo_video.html">
       <div class="t">Watch the promo</div>
       <div class="d">Full-screen promotional video with music.</div>
@@ -271,6 +299,7 @@
     <strong>Chamber Draw</strong> - A shedding-race card game.
     Developed and published by <a href="https://devnambiar.in" rel="noopener">Dev Nambiar</a>.
     <div class="links">
+      <a href="https://starmarine06.itch.io/chamber-draw" rel="noopener">Download</a>
       <a href="privacy_policy.html">Privacy</a>
       <a href="terms.html">Terms of Service</a>
       <a href="epic_games_account.html">Epic Games account</a>

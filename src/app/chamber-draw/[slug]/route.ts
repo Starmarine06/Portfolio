@@ -27,9 +27,20 @@ const MEDIA_FILES = [
   "chamber-draw-promo-portrait-2026.mp4",
 ];
 
+// Icons are revalidated rather than cached immutably so design updates reach browsers.
+const ICON_FILES = [
+  "favicon.ico",
+  "favicon.svg",
+  "favicon-32x32.png",
+  "apple-touch-icon.png",
+];
+
 const MIME_TYPES: Record<string, string> = {
   ".html": "text/html; charset=utf-8",
   ".mp4": "video/mp4",
+  ".ico": "image/x-icon",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
 };
 
 export async function GET(
@@ -52,7 +63,8 @@ export async function GET(
     });
   }
 
-  if (MEDIA_FILES.includes(slug)) {
+  const isIcon = ICON_FILES.includes(slug);
+  if (MEDIA_FILES.includes(slug) || isIcon) {
     const filePath = path.join(SOURCE_DIR, slug);
     try {
       const stat = await fs.stat(filePath);
@@ -62,7 +74,9 @@ export async function GET(
         headers: {
           "Content-Type": MIME_TYPES[path.extname(slug)] ?? "application/octet-stream",
           "Content-Length": String(stat.size),
-          "Cache-Control": "public, max-age=31536000, immutable",
+          "Cache-Control": isIcon
+            ? "public, max-age=86400, must-revalidate"
+            : "public, max-age=31536000, immutable",
         },
       });
     } catch {
