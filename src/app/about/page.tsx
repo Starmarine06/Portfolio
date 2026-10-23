@@ -12,7 +12,6 @@ import {
   FaLinkedin,
   FaLinux,
   FaNodeJs,
-  FaPhone,
   FaReact,
   FaVuejs,
   FaYarn,
@@ -42,6 +41,7 @@ import {
   SiVite,
 } from "react-icons/si";
 import { VscCode } from "react-icons/vsc";
+import { config } from "@/data/config";
 
 // @ts-ignore
 import { Splide, SplideSlide } from "@splidejs/react-splide";
@@ -51,26 +51,20 @@ import { TbTerminal2 } from "react-icons/tb";
 const CONTACT_LINKS = [
   {
     name: "Email",
-    content: "dev.nambiar@example.com",
-    href: "mailto:dev.nambiar@example.com",
+    content: config.email,
+    href: `mailto:${config.email}`,
     icon: <FaEnvelope height={"50px"} />,
   },
   {
-    name: "Phone",
-    content: "+1 (555) 000-0000",
-    href: "tel:+15550000000",
-    icon: <FaPhone height={"50px"} />,
-  },
-  {
     name: "LinkedIn",
-    href: "https://www.linkedin.com/in/dev-nambiar/",
-    content: "/dev-nambiar",
+    href: config.social.linkedin,
+    content: config.social.linkedin.replace("https://www.linkedin.com", "").replace(/\/$/, ""),
     icon: <FaLinkedin height={"50px"} />,
   },
   {
     name: "GitHub",
-    href: "https://github.com/dev-nambiar",
-    content: "/dev-nambiar",
+    href: config.social.github,
+    content: config.social.github.replace("https://github.com", ""),
     icon: <FaGithub height={"50px"} />,
   },
 ];

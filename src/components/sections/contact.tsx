@@ -1,14 +1,7 @@
 "use client";
 import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import ContactForm from "../ContactForm";
-import { config } from "@/data/config";
+import ContactLinks from "../contact/contact-links";
 import { SectionHeader } from "./section-header";
 import SectionWrapper from "../ui/section-wrapper";
 import { useSectionContext } from "@/contexts/section-context";
@@ -19,42 +12,30 @@ const ContactSection = () => {
   const isInactive = activeSection !== "contact";
 
   return (
-    <SectionWrapper id="contact" className={cn("h-auto pt-6 pb-20 md:py-20 max-w-7xl mx-auto px-4", isInactive && "pointer-inactive")}>
-      {/* Title pushed down a bit with extra top padding so it clears the model nicely */}
+    <SectionWrapper
+      id="contact"
+      className={cn("h-auto max-w-7xl mx-auto px-4 pt-6 pb-28 md:py-20", isInactive && "pointer-inactive")}
+    >
       <SectionHeader
         id="contact"
-        className="pt-4 md:pt-8"
+        className="pt-4 md:pt-8 md:static mb-8 sm:mb-10 md:mb-12"
         title={
           <>
             LET&apos;S WORK <br />
             TOGETHER
           </>
         }
+        desc="Got a project, an internship or just an idea? Send it over."
       />
-      {/* Two-column grid: form left, empty right (model floats in the right half) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 mt-4 md:mt-16 gap-8">
-        {/* Contact form card — shifted slightly down to vertically align with the phone */}
-        <Card className="w-full bg-white/70 dark:bg-black/70 backdrop-blur-sm rounded-xl md:mt-10 self-center">
-          <CardHeader>
-            <CardTitle className="text-4xl">Contact Form</CardTitle>
-            <CardDescription>
-              Please contact me directly at{" "}
-              <a
-                target="_blank"
-                href={`mailto:${config.email}`}
-                className="text-gray-200 cursor-can-hover rounded-lg"
-              >
-                {config.email.replace(/@/g, "(at)")}
-              </a>{" "}
-              or drop your info here.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ContactForm />
-          </CardContent>
-        </Card>
 
-        {/* Right column is intentionally empty — the Spline model renders here via AnimatedBackground */}
+      {/* Form on the left, the 3D phone floats in the empty right half (AnimatedBackground) */}
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="w-full max-w-xl space-y-5 md:max-w-none lg:max-w-xl">
+          <ContactLinks />
+          <div className="rounded-3xl border border-border bg-card/70 p-5 shadow-2xl backdrop-blur-xl sm:p-7">
+            <ContactForm />
+          </div>
+        </div>
         <div className="hidden md:block" aria-hidden="true" />
       </div>
     </SectionWrapper>
