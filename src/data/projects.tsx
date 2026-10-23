@@ -1,10 +1,4 @@
 import AceTernityLogo from "@/components/logos/aceternity";
-import SlideShow from "@/components/slide-show";
-import { Button } from "@/components/ui/button";
-import { TypographyH3, TypographyP } from "@/components/ui/typography";
-import { ArrowUpRight, ExternalLink, Link2, MoveUpRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { ReactNode } from "react";
 import { RiNextjsFill, RiNodejsFill, RiReactjsFill } from "react-icons/ri";
 import {
@@ -29,44 +23,24 @@ import {
   SiUnity,
   SiTelegram,
   SiNvidia,
+  SiRust,
+  SiGodotengine,
+  SiDotnet,
+  SiNpm,
+  SiGradle,
+  SiVite,
+  SiLatex,
+  SiHtml5,
+  SiEpicgames,
+  SiGoogleplay,
+  SiGooglecalendar,
+  SiWhatsapp,
+  SiCurseforge,
+  SiResend,
+  SiGreensock,
 } from "react-icons/si";
 import { FaJava, FaRobot, FaWindows } from "react-icons/fa";
-import { TbBrandFramerMotion } from "react-icons/tb";
-const BASE_PATH = "/assets/projects-screenshots";
-
-const ProjectsLinks = ({ live, repo }: { live: string; repo?: string }) => {
-  return (
-    <div className="flex flex-wrap items-center justify-start gap-3 my-4 mb-6">
-      {live && (
-        <Link
-          className="no-underline inline-flex"
-          rel="noopener noreferrer"
-          target="_blank"
-          href={live}
-        >
-          <Button variant={"default"} size={"sm"} className="gap-2 font-medium">
-            Visit Project
-            <ArrowUpRight className="w-4 h-4" />
-          </Button>
-        </Link>
-      )}
-      {repo && (
-        <Link
-          className="no-underline inline-flex"
-          rel="noopener noreferrer"
-          target="_blank"
-          href={repo}
-        >
-          <Button variant={"outline"} size={"sm"} className="gap-2 font-medium">
-            GitHub Repo
-            <ArrowUpRight className="w-4 h-4" />
-          </Button>
-        </Link>
-      )}
-    </div>
-  );
-};
-
+import { TbBrandCSharp, TbBrandFramerMotion } from "react-icons/tb";
 export type Skill = {
   title: string;
   bg: string;
@@ -238,7 +212,7 @@ const PROJECT_SKILLS = {
     title: "GSAP",
     bg: "black",
     fg: "white",
-    icon: "",
+    icon: <SiGreensock />,
   },
   framerMotion: {
     title: "Framer Motion",
@@ -256,7 +230,7 @@ const PROJECT_SKILLS = {
     title: "C#",
     bg: "black",
     fg: "white",
-    icon: <FaJava />,
+    icon: <TbBrandCSharp />,
   },
   unity: {
     title: "Unity",
@@ -276,224 +250,448 @@ const PROJECT_SKILLS = {
     fg: "white",
     icon: "⛏️",
   },
+  rust: {
+    title: "Rust",
+    bg: "black",
+    fg: "white",
+    icon: <SiRust />,
+  },
+  godot: {
+    title: "Godot",
+    bg: "black",
+    fg: "white",
+    icon: <SiGodotengine />,
+  },
+  dotnet: {
+    title: ".NET",
+    bg: "black",
+    fg: "white",
+    icon: <SiDotnet />,
+  },
+  npm: {
+    title: "npm",
+    bg: "black",
+    fg: "white",
+    icon: <SiNpm />,
+  },
+  gnn: {
+    title: "GNN",
+    bg: "black",
+    fg: "white",
+    icon: "🧠",
+  },
+  mininet: {
+    title: "Mininet + OVS",
+    bg: "black",
+    fg: "white",
+    icon: "🌐",
+  },
+  ryu: {
+    title: "Ryu SDN",
+    bg: "black",
+    fg: "white",
+    icon: "🛰️",
+  },
+  latex: {
+    title: "LaTeX",
+    bg: "black",
+    fg: "white",
+    icon: <SiLatex />,
+  },
+  html: {
+    title: "HTML5",
+    bg: "black",
+    fg: "white",
+    icon: <SiHtml5 />,
+  },
+  inno: {
+    title: "Inno Setup",
+    bg: "black",
+    fg: "white",
+    icon: "📦",
+  },
+  ocr: {
+    title: "Windows OCR",
+    bg: "black",
+    fg: "white",
+    icon: "🔍",
+  },
+  wpf: {
+    title: "WPF",
+    bg: "black",
+    fg: "white",
+    icon: "🪟",
+  },
+  webview2: {
+    title: "WebView2",
+    bg: "black",
+    fg: "white",
+    icon: "🧩",
+  },
+  vite: {
+    title: "Vite",
+    bg: "black",
+    fg: "white",
+    icon: <SiVite />,
+  },
+  powershell: {
+    title: "PowerShell",
+    bg: "black",
+    fg: "white",
+    icon: ">_",
+  },
+  simd: {
+    title: "SIMD",
+    bg: "black",
+    fg: "white",
+    icon: "⚡",
+  },
+  fabric: {
+    title: "Fabric",
+    bg: "black",
+    fg: "white",
+    icon: "🧵",
+  },
+  neoforge: {
+    title: "NeoForge",
+    bg: "black",
+    fg: "white",
+    icon: "🔨",
+  },
+  architectury: {
+    title: "Architectury",
+    bg: "black",
+    fg: "white",
+    icon: "🏛️",
+  },
+  gradle: {
+    title: "Gradle",
+    bg: "black",
+    fg: "white",
+    icon: <SiGradle />,
+  },
+  gdscript: {
+    title: "GDScript",
+    bg: "black",
+    fg: "white",
+    icon: <strong>GD</strong>,
+  },
+  shaders: {
+    title: "Godot Shaders",
+    bg: "black",
+    fg: "white",
+    icon: "✨",
+  },
+  eos: {
+    title: "Epic Online Services",
+    bg: "black",
+    fg: "white",
+    icon: <SiEpicgames />,
+  },
+  googleplay: {
+    title: "Google Play",
+    bg: "black",
+    fg: "white",
+    icon: <SiGoogleplay />,
+  },
+  googlecalendar: {
+    title: "Google Calendar",
+    bg: "black",
+    fg: "white",
+    icon: <SiGooglecalendar />,
+  },
+  whatsapp: {
+    title: "WhatsApp",
+    bg: "black",
+    fg: "white",
+    icon: <SiWhatsapp />,
+  },
+  curseforge: {
+    title: "CurseForge",
+    bg: "black",
+    fg: "white",
+    icon: <SiCurseforge />,
+  },
+  resend: {
+    title: "Resend",
+    bg: "black",
+    fg: "white",
+    icon: <SiResend />,
+  },
+  mcfunction: {
+    title: "mcfunction",
+    bg: "black",
+    fg: "white",
+    icon: <strong>fn</strong>,
+  },
+  datapack: {
+    title: "Datapack",
+    bg: "black",
+    fg: "white",
+    icon: "📦",
+  },
 };
+export type ProjectGroup = "AI & Systems" | "Tools" | "Games & Mods" | "Web";
 export type Project = {
   id: string;
   category: string;
   title: string;
-  src: string;
-  screenshots: string[];
+  tagline: string;
+  group: ProjectGroup;
+  featured?: boolean;
+  file: string;
+  highlights: string[];
+  src?: string;
   skills: { frontend: Skill[]; backend: Skill[] };
-  content: React.ReactNode | any;
   github?: string;
   live: string;
 };
 const projects: Project[] = [
   {
+    id: "stale-but-safe-te",
+    category: "Research Paper",
+    title: "The Cost of Stale Telemetry in Traffic Engineering",
+    tagline: "Does a learned policy beat a re-tuned heuristic when link counters arrive late, noisy and incomplete? A research paper with an audit tool.",
+    src: "/assets/projects-screenshots/stale-but-safe-te/landing.png",
+    group: "AI & Systems",
+    featured: true,
+    file: "stale-but-safe-te.py",
+    highlights: [
+      "A learned split-ratio policy trained through a differentiable fluid model, tested zero-shot on 24 Topology Zoo networks, replayed SNDlib traces and 27 Mininet TCP scenarios",
+      "Clean or moderate telemetry: the re-tuned heuristic matches or wins. Delay, noise and loss together: the learned policy leads by +0.033 dScore, but only 0.006 at packet level",
+      "An ECMP-fallback guard halves tail regret in simulation but not at packet level, and fluid features, not message passing, drive the result",
+    ],
+    skills: {
+      frontend: [PROJECT_SKILLS.python, PROJECT_SKILLS.gnn, PROJECT_SKILLS.html, PROJECT_SKILLS.latex],
+      backend: [PROJECT_SKILLS.mininet, PROJECT_SKILLS.ryu, PROJECT_SKILLS.docker],
+    },
+    live: "https://github.com/Starmarine06/stale-but-safe-te",
+    github: "https://github.com/Starmarine06/stale-but-safe-te",
+  },
+  {
+    id: "radialactions",
+    category: "Windows Tool",
+    title: "RadialActions",
+    tagline: "Shift-hover any file for a radial menu: convert, resize, merge, zip and more.",
+    src: "/assets/projects-screenshots/radialactions/landing.png",
+    group: "Tools",
+    featured: true,
+    file: "radialactions.rs",
+    highlights: [
+      "Images, PDF, Office, data and archive actions from one wheel, with no Office install needed for conversions",
+      "About 5 MB on disk and under 1 MB working set while idle, with no background services",
+      "Works on files in Explorer and on the desktop, plus a tray menu",
+    ],
+    skills: {
+      frontend: [PROJECT_SKILLS.rust, PROJECT_SKILLS.windows, PROJECT_SKILLS.ocr, PROJECT_SKILLS.inno],
+      backend: [],
+    },
+    live: "https://github.com/Starmarine06/RadialActions",
+    github: "https://github.com/Starmarine06/RadialActions",
+  },
+  {
+    id: "spotlight",
+    category: "Windows App",
+    title: "Spotlight for Windows",
+    tagline: "A keyboard-driven launcher in the spirit of macOS Spotlight and Raycast.",
+    src: "/assets/projects-screenshots/spotlight/landing.png",
+    group: "Tools",
+    featured: true,
+    file: "spotlight.cs",
+    highlights: [
+      "Launches Start Menu, Store and registered apps, tolerant of initials and typos",
+      "In-memory file index with operators like ext:pdf, ranked by match, recency and location",
+      "Learns from your picks and answers maths directly",
+    ],
+    skills: {
+      frontend: [PROJECT_SKILLS.react, PROJECT_SKILLS.ts, PROJECT_SKILLS.vite],
+      backend: [PROJECT_SKILLS.csharp, PROJECT_SKILLS.dotnet, PROJECT_SKILLS.wpf, PROJECT_SKILLS.webview2, PROJECT_SKILLS.powershell],
+    },
+    live: "https://github.com/Starmarine06/Spotlight",
+    github: "https://github.com/Starmarine06/Spotlight",
+  },
+  {
+    id: "bloodhound",
+    category: "CLI Tool",
+    title: "Bloodhound Search",
+    tagline: "Multi-threaded code and file search in Rust, runnable instantly with npx.",
+    src: "/assets/projects-screenshots/bloodhound/landing.png",
+    group: "Tools",
+    featured: true,
+    file: "bloodhound.rs",
+    highlights: [
+      "SIMD-accelerated scanning across all cores",
+      "Persistent on-disk trigram index for sub-millisecond repeat queries",
+      "Published on npm for Linux, macOS and Windows",
+    ],
+    skills: {
+      frontend: [PROJECT_SKILLS.rust, PROJECT_SKILLS.simd, PROJECT_SKILLS.npm, PROJECT_SKILLS.node, PROJECT_SKILLS.ts],
+      backend: [],
+    },
+    live: "https://github.com/Starmarine06/Bloodhound-Search",
+    github: "https://github.com/Starmarine06/Bloodhound-Search",
+  },
+  {
+    id: "gatebound",
+    category: "Minecraft Mod",
+    title: "Gatebound",
+    tagline: "An original RPG overhaul: classes, magic, parrying and dungeon gates.",
+    src: "/assets/projects-screenshots/gatebound/landing.png",
+    group: "Games & Mods",
+    file: "gatebound.java",
+    highlights: [
+      "Pick a class, level up, parry and dodge, cast spells and bind allies",
+      "Conquer dungeon gates and trade for upgrades",
+      "One codebase for Fabric and NeoForge through Architectury",
+    ],
+    skills: {
+      frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java, PROJECT_SKILLS.gradle],
+      backend: [PROJECT_SKILLS.fabric, PROJECT_SKILLS.neoforge, PROJECT_SKILLS.architectury],
+    },
+    live: "https://github.com/Starmarine06/Gatebound",
+    github: "https://github.com/Starmarine06/Gatebound",
+  },
+  {
+    id: "chamber-draw",
+    category: "Game",
+    title: "Chamber Draw",
+    tagline: "Fast, chaotic party card game: Uno flow, Exploding Kittens dread, push-your-luck draws.",
+    src: "/assets/projects-screenshots/chamber-draw/landing.png",
+    group: "Games & Mods",
+    featured: true,
+    file: "chamber-draw.gd",
+    highlights: [
+      "2 to 8 players around a full 3D poker table",
+      "Double draw pile and king-of-the-hill action cards",
+      "The Chamber Draw: a risky pull nobody survives on luck alone",
+    ],
+    skills: {
+      frontend: [PROJECT_SKILLS.godot, PROJECT_SKILLS.gdscript, PROJECT_SKILLS.shaders],
+      backend: [PROJECT_SKILLS.eos],
+    },
+    live: "https://starmarine06.itch.io/chamber-draw",
+    github: "https://github.com/Starmarine06/Chamber-Draw",
+  },
+  {
     id: "bouncelol",
     category: "Game",
     title: "BounceLOL",
+    tagline: "Chaotic arcade bouncer with skins, trails and a friends leaderboard.",
+    group: "Games & Mods",
+    file: "bouncelol.cs",
+    highlights: [
+      "In-game store with skins and trails",
+      "Ads and in-game currency monetisation",
+      "Built-in leaderboard to compete with friends",
+    ],
     src: "/assets/projects-screenshots/bouncelol/landing.png",
-    screenshots: ["landing.png"],
     skills: {
-      frontend: [PROJECT_SKILLS.csharp, PROJECT_SKILLS.unity],
+      frontend: [PROJECT_SKILLS.csharp, PROJECT_SKILLS.unity, PROJECT_SKILLS.googleplay],
       backend: [],
     },
     live: "https://github.com/Starmarine06/BounceLOL",
     github: "https://github.com/Starmarine06/BounceLOL",
-    get content() {
-      return (
-        <div>
-          <TypographyP className="font-mono text-2xl text-center">
-            The game bouncelol on google play store
-          </TypographyP>
-          <TypographyP className="font-mono">
-            BounceLOL is a vibrant and highly random game featuring an in-game store with various skins and trails. Compete with your friends on the inbuilt leaderboard and enjoy the colorful chaos!
-          </TypographyP>
-          <ProjectsLinks live={this.live} repo={this.github} />
-          <TypographyH3 className="my-4 mt-8">Features</TypographyH3>
-          <ul className="list-disc ml-6 font-mono">
-            <li>In-game Store with skins and trails</li>
-            <li>Monetization through ads and in-game currency</li>
-            <li>Inbuilt Leaderboard for social competition</li>
-            <li>Visually dynamic and randomized gameplay</li>
-          </ul>
-        </div>
-      );
-    },
   },
   {
     id: "recommendme",
     category: "Web Application",
     title: "RecommendMe",
+    tagline: "Personalized anime, movie and cartoon picks in a few clicks.",
+    group: "Web",
+    file: "recommendme.tsx",
+    highlights: [
+      "Anime, movies and cartoon series in one place",
+      "Next.js and TypeScript front end",
+      "Hosted on Firebase",
+    ],
     src: "/assets/projects-screenshots/recommendme/landing.png",
-    screenshots: ["landing.png"],
     skills: {
-      frontend: [PROJECT_SKILLS.ts, PROJECT_SKILLS.next, PROJECT_SKILLS.tailwind],
+      frontend: [PROJECT_SKILLS.ts, PROJECT_SKILLS.next, PROJECT_SKILLS.react, PROJECT_SKILLS.tailwind],
       backend: [PROJECT_SKILLS.firebase],
     },
     live: "https://recommendme-101.web.app/",
     github: "https://github.com/Starmarine06/RecommendMe",
-    get content() {
-      return (
-        <div>
-          <TypographyP className="font-mono text-2xl text-center">
-            A website that will recommend you anything!
-          </TypographyP>
-          <TypographyP className="font-mono">
-            RecommendMe provides personalized recommendations across media categories like Anime, Movies, and Cartoon Series. Discover your next favorite show with ease.
-          </TypographyP>
-          <ProjectsLinks live={this.live} repo={this.github} />
-          <TypographyH3 className="my-4 mt-8">Media Categories</TypographyH3>
-          <ul className="list-disc ml-6 font-mono">
-            <li>Anime</li>
-            <li>Movies</li>
-            <li>Cartoon Series</li>
-          </ul>
-        </div>
-      );
-    },
   },
   {
     id: "portfolio",
     category: "Portfolio",
     title: "Professional Portfolio",
+    tagline: "This site: a 3D Spline hero, matrix rain and an interactive skills keyboard.",
+    group: "Web",
+    file: "portfolio.tsx",
+    highlights: [
+      "3D Spline hero and an interactive skills keyboard",
+      "Matrix-rain background that follows the theme",
+      "Next.js, Tailwind and Framer Motion",
+    ],
     src: "/assets/projects-screenshots/portfolio/landing.png",
-    screenshots: ["landing.png"],
     skills: {
-      frontend: [
-        PROJECT_SKILLS.ts,
-        PROJECT_SKILLS.next,
-        PROJECT_SKILLS.tailwind,
-        PROJECT_SKILLS.spline,
-        PROJECT_SKILLS.framerMotion,
-      ],
-      backend: [],
+      frontend: [PROJECT_SKILLS.ts, PROJECT_SKILLS.next, PROJECT_SKILLS.react, PROJECT_SKILLS.tailwind, PROJECT_SKILLS.spline, PROJECT_SKILLS.framerMotion, PROJECT_SKILLS.gsap, PROJECT_SKILLS.shadcn],
+      backend: [PROJECT_SKILLS.resend, PROJECT_SKILLS.sockerio],
     },
     live: "https://devnambiar.in",
     github: "https://github.com/Starmarine06/Portfolio",
-    get content() {
-      return (
-        <div>
-          <TypographyP className="font-mono text-2xl text-center">
-            AI & ML Engineer Portfolio
-          </TypographyP>
-          <TypographyP className="font-mono">
-            A high-performance personal portfolio showcasing expertise in machine learning and web development. Features interactive 3D elements and a sleek, modern design.
-          </TypographyP>
-          <ProjectsLinks live={this.live} repo={this.github} />
-        </div>
-      );
-    },
   },
   {
     id: "graves",
     category: "Minecraft Datapack",
     title: "Graves",
+    tagline: "Die anywhere and a grave keeps your items safe until you return.",
+    group: "Games & Mods",
+    file: "graves.mcfunction",
+    highlights: [
+      "Creates a grave where you die",
+      "Items stay safe until you come back for them",
+      "Pure datapack, no mod loader needed",
+    ],
     src: "/assets/projects-screenshots/graves/landing.png",
-    screenshots: ["landing.png"],
     skills: {
-      frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java],
+      frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.mcfunction, PROJECT_SKILLS.datapack],
       backend: [],
     },
     live: "https://www.planetminecraft.com/data-pack/graves-by-starmarine06/",
     github: "https://github.com/Starmarine06/Graves",
-    get content() {
-      return (
-        <div>
-          <TypographyP className="font-mono text-2xl text-center">
-            Adds a simple grave to Minecraft
-          </TypographyP>
-          <TypographyP className="font-mono">
-            Tired of losing your items on death? Graves automatically creates a grave at your death location, safely storing your items until you return to claim them.
-          </TypographyP>
-          <ProjectsLinks live={this.live} repo={this.github} />
-        </div>
-      );
-    },
   },
   {
     id: "ai-assistant",
     category: "AI/ML",
     title: "AI Assistant",
+    tagline: "A Telegram-controlled Windows agent powered by NVIDIA-hosted LLMs.",
+    group: "AI & Systems",
+    featured: true,
+    file: "ai-assistant.py",
+    highlights: [
+      "Control your PC from Telegram: terminal, apps, clipboard, lock and unlock",
+      "Screenshot grid overlay (A1-J10) for coordinate clicking and typing",
+      "Google Calendar sync, scheduler, macro recorder and tray GUI",
+    ],
     src: "/assets/projects-screenshots/ai-assistant/landing.png",
-    screenshots: ["landing.png"],
     skills: {
-      frontend: [
-        PROJECT_SKILLS.ai,
-        PROJECT_SKILLS.telegram,
-        PROJECT_SKILLS.windows,
-      ],
-      backend: [
-        PROJECT_SKILLS.python,
-        PROJECT_SKILLS.nvidia,
-      ],
+      frontend: [PROJECT_SKILLS.ai, PROJECT_SKILLS.telegram, PROJECT_SKILLS.windows, PROJECT_SKILLS.googlecalendar, PROJECT_SKILLS.whatsapp],
+      backend: [PROJECT_SKILLS.python, PROJECT_SKILLS.nvidia],
     },
     live: "https://github.com/Starmarine06/AIAssistant",
     github: "https://github.com/Starmarine06/AIAssistant",
-    get content() {
-      return (
-        <div className="space-y-4">
-          <TypographyP className="text-xl font-semibold text-center text-foreground/90">
-            Windows-based Autonomous Personal AI Assistant
-          </TypographyP>
-          <TypographyP className="text-muted-foreground leading-relaxed">
-            AI Assistant is a desktop automation and intelligent assistant system powered by NVIDIA-hosted LLMs and the Telegram Bot API. It seamlessly bridges mobile control with desktop automation, giving you complete remote mastery over your Windows workstation.
-          </TypographyP>
-          <ProjectsLinks live={this.live} repo={this.github} />
-          
-          <TypographyH3 className="my-3 mt-6 text-lg font-bold">Key Capabilities</TypographyH3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-              <strong className="block text-foreground mb-1">🖥️ PC Automation & Control</strong>
-              <span className="text-muted-foreground">Run terminal commands, launch applications/websites, manage clipboard, and lock/unlock Windows workstation.</span>
-            </div>
-            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-              <strong className="block text-foreground mb-1">🎯 Vision & Coordinate Grid</strong>
-              <span className="text-muted-foreground">Grid screenshot overlay (A1-J10) and coordinate-based mouse clicking and typing simulation.</span>
-            </div>
-            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-              <strong className="block text-foreground mb-1">📅 Smart Scheduler & Calendar</strong>
-              <span className="text-muted-foreground">Google Calendar synchronization, background interval tasks, custom timers, and WhatsApp messaging via local address book.</span>
-            </div>
-            <div className="p-3 rounded-lg bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800">
-              <strong className="block text-foreground mb-1">⚡ Dynamic Skills & Tray GUI</strong>
-              <span className="text-muted-foreground">Dynamically register custom Python modules, system tray controls, macro recorder, and configuration GUI.</span>
-            </div>
-          </div>
-        </div>
-      );
-    },
   },
   {
     id: "prismcraft",
     category: "Minecraft Mod",
     title: "PrismCraft Mod",
+    tagline: "Mix up to three dyes to colour blocks in any shade you can imagine.",
+    group: "Games & Mods",
+    featured: true,
+    file: "prismcraft.java",
+    highlights: [
+      "Mix up to three dyes to make custom colours",
+      "Apply any colour to blocks",
+      "Published on CurseForge",
+    ],
     src: "/assets/projects-screenshots/prismcraft/landing.png",
-    screenshots: ["landing.png"],
     skills: {
-      frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java],
+      frontend: [PROJECT_SKILLS.minecraft, PROJECT_SKILLS.java, PROJECT_SKILLS.curseforge],
       backend: [],
     },
     live: "https://www.curseforge.com/minecraft/mc-mods/prismcraft-dyeable-blocks",
-    github: "https://github.com/Starmarine06/PrismCraft",
-    get content() {
-      return (
-        <div>
-          <TypographyP className="font-mono text-2xl text-center">
-            Infinite Spectrum of Colors
-          </TypographyP>
-          <TypographyP className="font-mono">
-            Imagine having the power to create any shade you desire, bringing unparalleled customization and vibrancy to your builds. This mod introduces a powerful mechanic to dye blocks, unleashing a world of color you&apos;ve only dreamed of. By mixing up to three dyes, you can generate unique custom colors and apply them to your favorite blocks.
-          </TypographyP>
-          <ProjectsLinks live={this.live} repo={this.github} />
-          <TypographyH3 className="my-4 mt-8">Unleash Creativity</TypographyH3>
-          <TypographyP className="font-mono">
-            Whether you&apos;re building a sprawling city or a cozy cottage, you&apos;ll never have to compromise on your color scheme again. Transform your Minecraft world with an infinite spectrum of colors and elevate your building game.
-          </TypographyP>
-        </div>
-      );
-    },
   },
 ];
 export default projects;
