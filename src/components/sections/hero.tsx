@@ -58,7 +58,7 @@ const HeroSection = () => {
                           "cursor-default font-display"
                         )}
                       >
-                        {config.author.split(" ")[0]}
+                        {config.author.split(" ")[0]}{" "}
                         <br className="md:block hidden" />
                         {config.author.split(" ")[1]}
                       </h1>
@@ -85,9 +85,7 @@ const HeroSection = () => {
               </div>
               <div className="mt-8 flex flex-col gap-3 w-fit">
                 <Link
-                  href={
-                    "https://drive.google.com/file/d/12gcQl-ItrxGl3AJRFvwiSQb-p_sKM3d-/view?usp=sharing"
-                  }
+                  href={config.resume}
                   target="_blank"
                   className="flex-1"
                 >

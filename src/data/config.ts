@@ -21,15 +21,16 @@ const config = {
     "Framer Motion",
   ],
   author: "Dev Nambiar",
-  email: "devnambiar06@gmail.com",
+  email: "contact@devnambiar.in",
   site: "https://devnambiar.in",
+  resume: "https://drive.google.com/file/d/12gcQl-ItrxGl3AJRFvwiSQb-p_sKM3d-/view?usp=sharing",
 
   // for github stars button
   githubUsername: "Starmarine06",
   githubRepo: "Portfolio",
 
   get ogImg() {
-    return this.site + "/assets/seo/og-image.png";
+    return this.site + "/assets/seo/og-dev-nambiar.png";
   },
   social: {
     linkedin: "https://www.linkedin.com/in/dev-nambiar-0482a9342/",

@@ -10,6 +10,7 @@ import AppOverlays from "@/components/app-overlays";
 import { Providers } from "@/components/providers";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(config.site),
   title: config.title,
   description: config.description.long,
   keywords: config.keywords,
@@ -25,15 +26,23 @@ export const metadata: Metadata = {
     title: config.title,
     description: config.description.short,
     url: config.site,
+    siteName: config.author,
+    locale: "en_US",
     images: [
       {
         url: config.ogImg,
-        width: 800,
-        height: 600,
-        alt: "Portfolio preview",
+        width: 1200,
+        height: 630,
+        alt: "Dev Nambiar, Machine Learning Engineer",
       },
     ],
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: config.title,
+    description: config.description.short,
+    images: [config.ogImg],
   },
   robots: {
     index: true,

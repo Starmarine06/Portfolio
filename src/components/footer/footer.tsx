@@ -4,11 +4,14 @@ import { footer } from "./config";
 import { Button } from "../ui/button";
 import SocialMediaButtons from "../social/social-media-icons";
 import { config } from "@/data/config";
+import MobileDock from "./mobile-dock";
 
 function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="flex w-full shrink-0 flex-col items-center gap-2 border-t border-border px-4 pt-6 pb-[calc(3.5rem+env(safe-area-inset-bottom)+0.5rem)] sm:flex-row md:px-6 md:pb-6 sm:justify-between pointer-events-auto relative z-[90]">
+    <>
+    <MobileDock />
+    <footer className="hidden w-full shrink-0 flex-col items-center gap-2 border-t border-border px-6 pt-6 pb-6 md:flex md:flex-row md:justify-between pointer-events-auto relative z-[90]">
       <p className="text-xs text-gray-500 dark:text-gray-400">
         © {year} {config.author}. All rights reserved.
       </p>
@@ -29,6 +32,7 @@ function Footer() {
         })}
       </nav>
     </footer>
+    </>
   );
 }
 
