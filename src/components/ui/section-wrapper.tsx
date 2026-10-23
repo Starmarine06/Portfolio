@@ -22,7 +22,7 @@ const SectionWrapper = ({ id, className, children, ...props }: SectionWrapperPro
     <section
       id={id}
       ref={containerRef}
-      className={cn("relative pointer-events-none", className)}
+      className={cn("relative pointer-events-none scroll-mt-16", className)}
       {...props}
     >
       <motion.div

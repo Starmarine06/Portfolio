@@ -118,8 +118,8 @@ const SECTION_STATES: Record<Section, SectionState> = {
     mobile:  { x: "0vw",   y: "0vh",  scale: 0.85, rotY: Y, rotX: X, rotZ: 0.23 + Math.PI * 1.5 },
   },
   projects: {
-    desktop: { x: "0vw",   y: "-5vh", scale: 0.85, rotY: Y + Math.PI / 2, rotX: X, rotZ: Z },
-    mobile:  { x: "0vw",   y: "10vh", scale: 0.7,  rotY: Y + Math.PI / 2, rotX: X, rotZ: Z },
+    desktop: { x: "0vw",   y: "-7vh",  scale: 2.2,  rotY: -0.19 + Math.PI, rotX: -1.36, rotZ: 4.99 + Math.PI / 2 },
+    mobile:  { x: "0vw",   y: "10vh", scale: 0.7,  rotY: Y + Math.PI / 4, rotX: X + Math.PI, rotZ: Z },
   },
   contact: {
     desktop: { x: "22vw", y: "3vh", scale: 1.98, rotY: -0.19, rotX: -1.36, rotZ: 4.99 },
@@ -246,11 +246,11 @@ const AnimatedBackground = () => {
     };
   }, []);
 
-  const startIdleRotation = useCallback(() => {
+  const startIdleRotation = useCallback((section: Section = "hero") => {
     const root = getRootObj();
     if (!root) return;
     idleRotationRef.current?.kill();
-    const state = SECTION_STATES.hero[isMobileRef.current ? "mobile" : "desktop"];
+    const state = SECTION_STATES[section][isMobileRef.current ? "mobile" : "desktop"];
     idleRotationRef.current = gsap.to(root.rotation, {
       y: state.rotY + Math.PI / 12,
       duration: 3.5,
@@ -272,7 +272,7 @@ const AnimatedBackground = () => {
     if (el) gsap.to(el, { x: state.x, y: state.y, opacity: 1, duration, ease: "power2.out", overwrite: "auto" });
     const root = getRootObj();
     if (root) {
-      gsap.to(root.rotation, { x: state.rotX, y: state.rotY, z: state.rotZ, duration, ease: "power2.out", overwrite: "auto", onComplete: () => { if (section === "hero") startIdleRotation(); } });
+      gsap.to(root.rotation, { x: state.rotX, y: state.rotY, z: state.rotZ, duration, ease: "power2.out", overwrite: "auto", onComplete: () => { if (section === "hero" || section === "projects") startIdleRotation(section); } });
       gsap.to(root.scale, { x: state.scale, y: state.scale, z: state.scale, duration, ease: "power2.out", overwrite: "auto" });
       root.position.x = 0; root.position.y = 0;
     }
