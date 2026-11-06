@@ -1,8 +1,9 @@
 import Script from "next/script";
+import { config } from "@/data/config";
 
-// Renders nothing until NEXT_PUBLIC_GA_ID (e.g. G-XXXXXXXXXX) is set in Vercel.
+// NEXT_PUBLIC_GA_ID overrides the id in config; renders nothing if neither is set.
 export default function GoogleAnalytics() {
-  const id = process.env.NEXT_PUBLIC_GA_ID;
+  const id = process.env.NEXT_PUBLIC_GA_ID || config.gaId;
   if (!id) return null;
   return (
     <>

@@ -23,6 +23,8 @@ const config = {
   author: "Dev Nambiar",
   email: "contact@devnambiar.in",
   site: "https://devnambiar.in",
+  // Public GA4 measurement id (visible in page source by design).
+  gaId: "G-3NXQK92TH3",
   resume: "https://drive.google.com/file/d/12gcQl-ItrxGl3AJRFvwiSQb-p_sKM3d-/view?usp=sharing",
 
   // for github stars button
