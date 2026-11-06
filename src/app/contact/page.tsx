@@ -1,6 +1,15 @@
 import React from "react";
+import type { Metadata } from "next";
 import ContactForm from "@/components/ContactForm";
 import ContactLinks from "@/components/contact/contact-links";
+
+export const metadata: Metadata = {
+  title: "Contact | Dev Nambiar",
+  description:
+    "Hire Dev Nambiar or pitch a project, internship or collaboration. Send a message and get a reply by email.",
+  alternates: { canonical: "/contact" },
+  openGraph: { url: "/contact", title: "Contact | Dev Nambiar" },
+};
 
 function Page() {
   return (

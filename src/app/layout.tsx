@@ -8,10 +8,12 @@ import Footer from "@/components/footer/footer";
 import Script from "next/script";
 import AppOverlays from "@/components/app-overlays";
 import { Providers } from "@/components/providers";
+import GoogleAnalytics from "@/components/seo/google-analytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL(config.site),
   title: config.title,
+  alternates: { canonical: "/" },
   description: config.description.long,
   keywords: config.keywords,
   authors: [{ name: config.author }],
@@ -48,6 +50,12 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+      : undefined,
+  },
 };
 
 const inter = Inter({
@@ -73,12 +81,14 @@ export default function RootLayout({
         <link rel="shortcut icon" href="/favicon.svg" />
         <link rel="apple-touch-icon" href="/favicon.svg" />
         <link rel="preload" as="fetch" href="/assets/iphone_main.spline" crossOrigin="anonymous" />
-        <Script
-          defer
-          src={process.env.UMAMI_DOMAIN}
-          data-website-id={process.env.UMAMI_SITE_ID}
-        ></Script>
-        {/* <Analytics /> */}
+        {process.env.UMAMI_DOMAIN && (
+          <Script
+            defer
+            src={process.env.UMAMI_DOMAIN}
+            data-website-id={process.env.UMAMI_SITE_ID}
+          ></Script>
+        )}
+        <GoogleAnalytics />
       </head>
       <body>
         <Providers>

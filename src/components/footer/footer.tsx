@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import SocialMediaButtons from "../social/social-media-icons";
 import { config } from "@/data/config";
 import MobileDock from "./mobile-dock";
+import ProductHuntBadge from "../seo/product-hunt-badge";
 
 function Footer() {
   const year = new Date().getFullYear();
@@ -16,6 +17,7 @@ function Footer() {
         © {year} {config.author}. All rights reserved.
       </p>
       <SocialMediaButtons />
+      <ProductHuntBadge />
       <nav className="flex gap-4 sm:gap-6 z-10 pointer-events-auto">
         {footer.map((link, index) => {
           const { title, href } = link;
